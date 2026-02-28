@@ -11,6 +11,15 @@ interface AdCardProps {
 }
 
 export default function AdCard({ ad, variant = "default" }: AdCardProps) {
+  // Normalize data from database
+  const bonusDetails = ad.bonusDetails || ad.bonus_details;
+  const isFeatured = ad.featured === true || ad.featured === 1;
+  const tags: string[] = Array.isArray(ad.tags) 
+    ? ad.tags 
+    : typeof ad.tags === 'string' 
+      ? JSON.parse(ad.tags || '[]') 
+      : [];
+
   const handleClick = () => {
     window.open(`/go/${ad.id}`, "_blank");
   };
@@ -57,9 +66,9 @@ export default function AdCard({ ad, variant = "default" }: AdCardProps) {
         <div className="absolute inset-0 bg-gradient-to-br from-gold/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity" />
 
         {/* Tags */}
-        {ad.tags && ad.tags.length > 0 && (
+        {tags && tags.length > 0 && (
           <div className="absolute top-4 right-4 flex gap-2">
-            {ad.tags.map((tag) => (
+            {tags.map((tag) => (
               <Badge key={tag} variant="gold" size="sm">
                 {tag}
               </Badge>
@@ -91,8 +100,8 @@ export default function AdCard({ ad, variant = "default" }: AdCardProps) {
             <p className="text-gray-400 mb-4">{ad.description}</p>
             <div className="mb-4">
               <span className="text-3xl md:text-4xl font-bold text-gradient">{ad.bonus}</span>
-              {ad.bonusDetails && (
-                <span className="block text-gray-400 text-sm mt-1">{ad.bonusDetails}</span>
+              {bonusDetails && (
+                <span className="block text-gray-400 text-sm mt-1">{bonusDetails}</span>
               )}
             </div>
             <Button size="lg" glow className="w-full md:w-auto">
@@ -115,9 +124,9 @@ export default function AdCard({ ad, variant = "default" }: AdCardProps) {
       onClick={handleClick}
     >
       {/* Tags */}
-      {ad.tags && ad.tags.length > 0 && (
+      {tags && tags.length > 0 && (
         <div className="absolute top-3 right-3 flex gap-1">
-          {ad.tags.slice(0, 1).map((tag) => (
+          {tags.slice(0, 1).map((tag) => (
             <Badge key={tag} variant="gold" size="sm">
               {tag}
             </Badge>
@@ -139,8 +148,8 @@ export default function AdCard({ ad, variant = "default" }: AdCardProps) {
       {/* Bonus */}
       <div className="mb-4">
         <span className="text-xl font-bold text-gold">{ad.bonus}</span>
-        {ad.bonusDetails && (
-          <span className="block text-gray-500 text-xs">{ad.bonusDetails}</span>
+        {bonusDetails && (
+          <span className="block text-gray-500 text-xs">{bonusDetails}</span>
         )}
       </div>
 

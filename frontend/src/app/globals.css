@@ -4,17 +4,27 @@
 
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap');
 
+:root {
+  --color-gold: #d4af37;
+  --color-gold-light: #f5d65a;
+  --color-gold-dark: #b8972e;
+  --color-background: #0f0f0f;
+  --color-secondary: #1a1a1a;
+  --color-secondary-light: #252525;
+}
+
 @layer base {
   html {
     scroll-behavior: smooth;
   }
 
   body {
-    @apply bg-background text-white font-sans antialiased;
+    @apply text-white font-sans antialiased;
+    background-color: var(--color-background);
   }
 
   ::selection {
-    @apply bg-gold/30;
+    background-color: rgba(var(--color-gold-rgb, 212, 175, 55), 0.3);
   }
 
   ::-webkit-scrollbar {
@@ -22,35 +32,83 @@
   }
 
   ::-webkit-scrollbar-track {
-    @apply bg-secondary;
+    background-color: var(--color-secondary);
   }
 
   ::-webkit-scrollbar-thumb {
-    @apply bg-gold/50 rounded-full;
+    background-color: var(--color-gold);
+    opacity: 0.5;
+    border-radius: 9999px;
   }
 
   ::-webkit-scrollbar-thumb:hover {
-    @apply bg-gold;
+    background-color: var(--color-gold);
   }
 }
 
 @layer components {
   .glass-card {
-    @apply bg-secondary/80 backdrop-blur-sm border border-white/10 rounded-xl;
+    @apply backdrop-blur-sm border border-white/10 rounded-xl;
+    background-color: rgba(26, 26, 26, 0.8);
   }
 
   .glow-border {
-    @apply border border-gold/30 hover:border-gold/60 transition-colors duration-300;
+    border-color: var(--color-gold);
+    opacity: 0.3;
+    transition: opacity 0.3s;
+  }
+
+  .glow-border:hover {
+    opacity: 0.6;
   }
 
   .text-gradient {
-    @apply bg-gradient-to-r from-gold to-gold-light bg-clip-text text-transparent;
+    background: linear-gradient(to right, var(--color-gold), var(--color-gold-light));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
   }
 
   .neon-glow {
     text-shadow: 0 0 10px rgba(212, 175, 55, 0.5),
                  0 0 20px rgba(212, 175, 55, 0.3),
                  0 0 40px rgba(212, 175, 55, 0.2);
+  }
+
+  .bg-gold {
+    background-color: var(--color-gold) !important;
+  }
+
+  .bg-secondary {
+    background-color: var(--color-secondary) !important;
+  }
+
+  .bg-background {
+    background-color: var(--color-background) !important;
+  }
+
+  .text-gold {
+    color: var(--color-gold) !important;
+  }
+
+  .border-gold {
+    border-color: var(--color-gold) !important;
+  }
+
+  .from-gold {
+    --tw-gradient-from: var(--color-gold) !important;
+  }
+
+  .to-gold-light {
+    --tw-gradient-to: var(--color-gold-light) !important;
+  }
+
+  .shadow-glow {
+    box-shadow: 0 0 20px var(--color-gold);
+  }
+
+  .shadow-glow-lg {
+    box-shadow: 0 0 30px var(--color-gold);
   }
 }
 

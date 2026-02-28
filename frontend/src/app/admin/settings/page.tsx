@@ -1,11 +1,25 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import { useAuth } from "@/contexts/AuthContext";
+import { api } from "@/lib/api";
 import { AdminShell } from "@/components/admin";
 import { Button } from "@/components/ui";
 
+interface Settings {
+  siteName: string;
+  primaryColor: string;
+  secondaryColor: string;
+  socialDiscord: string;
+  socialTelegram: string;
+  socialTwitch: string;
+  socialKick: string;
+  socialYoutube: string;
+}
+
 export default function SettingsPage() {
-  const [settings, setSettings] = useState({
+  const { token } = useAuth();
+  const [settings, setSettings] = useState<Settings>({
     siteName: "CasinoHub",
     primaryColor: "#d4af37",
     secondaryColor: "#1a1a1a",
@@ -15,10 +29,58 @@ export default function SettingsPage() {
     socialKick: "#",
     socialYoutube: "#",
   });
+  const [isLoading, setIsLoading] = useState(true);
+  const [isSaving, setIsSaving] = useState(false);
+  const [message, setMessage] = useState<{ type: "success" | "error"; text: string } | null>(null);
 
-  const handleSave = () => {
-    alert("Ayarlar kaydedildi! (Database bağlantısı gerekli)");
+  useEffect(() => {
+    if (token) {
+      loadSettings();
+    }
+  }, [token]);
+
+  const loadSettings = async () => {
+    if (!token) return;
+    try {
+      const response = await api.getSettings(token);
+      if (response.success && response.data) {
+        setSettings(response.data as Settings);
+      }
+    } catch (error) {
+      console.error("Failed to load settings:", error);
+    } finally {
+      setIsLoading(false);
+    }
   };
+
+  const handleSave = async () => {
+    if (!token) return;
+    setIsSaving(true);
+    setMessage(null);
+
+    try {
+      const response = await api.updateSettings(token, settings);
+      if (response.success) {
+        setMessage({ type: "success", text: "Ayarlar başarıyla kaydedildi!" });
+      } else {
+        setMessage({ type: "error", text: response.error || "Ayarlar kaydedilemedi" });
+      }
+    } catch (error) {
+      setMessage({ type: "error", text: "Bir hata oluştu" });
+    } finally {
+      setIsSaving(false);
+    }
+  };
+
+  if (isLoading) {
+    return (
+      <AdminShell>
+        <div className="flex items-center justify-center py-12">
+          <div className="animate-spin w-8 h-8 border-4 border-gold border-t-transparent rounded-full" />
+        </div>
+      </AdminShell>
+    );
+  }
 
   return (
     <AdminShell>
@@ -26,6 +88,18 @@ export default function SettingsPage() {
         <h1 className="text-2xl font-bold text-white mb-2">Ayarlar</h1>
         <p className="text-gray-400">Site ayarlarını yapılandırın</p>
       </div>
+
+      {message && (
+        <div
+          className={`mb-6 p-4 rounded-lg ${
+            message.type === "success"
+              ? "bg-green-500/20 border border-green-500/50 text-green-400"
+              : "bg-red-500/20 border border-red-500/50 text-red-400"
+          }`}
+        >
+          {message.text}
+        </div>
+      )}
 
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
         {/* General Settings */}
@@ -131,6 +205,18 @@ export default function SettingsPage() {
             </div>
             <div>
               <label className="block text-sm font-medium text-gray-300 mb-2">
+                Kick
+              </label>
+              <input
+                type="url"
+                value={settings.socialKick}
+                onChange={(e) => setSettings({ ...settings, socialKick: e.target.value })}
+                className="w-full px-4 py-3 rounded-lg bg-background border border-white/10 text-white focus:outline-none focus:border-gold/50"
+                placeholder="https://kick.com/..."
+              />
+            </div>
+            <div>
+              <label className="block text-sm font-medium text-gray-300 mb-2">
                 YouTube
               </label>
               <input
@@ -146,7 +232,9 @@ export default function SettingsPage() {
       </div>
 
       <div className="mt-6 flex justify-end">
-        <Button onClick={handleSave}>Ayarları Kaydet</Button>
+        <Button onClick={handleSave} disabled={isSaving}>
+          {isSaving ? "Kaydediliyor..." : "Ayarları Kaydet"}
+        </Button>
       </div>
     </AdminShell>
   );

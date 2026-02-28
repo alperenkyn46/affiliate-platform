@@ -2,14 +2,7 @@
 
 import Link from "next/link";
 import Container from "./Container";
-
-const socialLinks = [
-  { name: "Discord", href: "#" },
-  { name: "Telegram", href: "#" },
-  { name: "Twitch", href: "#" },
-  { name: "Kick", href: "#" },
-  { name: "YouTube", href: "#" },
-];
+import { useSettings } from "@/contexts/SettingsContext";
 
 const footerLinks = [
   { name: "Gizlilik Politikası", href: "#" },
@@ -20,6 +13,19 @@ const footerLinks = [
 
 export default function Footer() {
   const currentYear = new Date().getFullYear();
+  const { settings } = useSettings();
+
+  const socialLinks = [
+    { name: "Discord", href: settings.socialDiscord },
+    { name: "Telegram", href: settings.socialTelegram },
+    { name: "Twitch", href: settings.socialTwitch },
+    { name: "Kick", href: settings.socialKick },
+    { name: "YouTube", href: settings.socialYoutube },
+  ];
+
+  // Site adından ilk harfi al
+  const siteInitial = settings.siteName.charAt(0).toUpperCase();
+  const siteParts = settings.siteName.split(/(?=[A-Z])/);
 
   return (
     <footer className="bg-secondary/50 border-t border-white/5 mt-20">
@@ -31,11 +37,17 @@ export default function Footer() {
             <div>
               <Link href="/" className="flex items-center gap-2 mb-4">
                 <div className="w-10 h-10 rounded-lg bg-gradient-to-br from-gold to-gold-light flex items-center justify-center">
-                  <span className="text-background font-bold text-xl">C</span>
+                  <span className="text-background font-bold text-xl">{siteInitial}</span>
                 </div>
                 <span className="text-xl font-bold">
-                  <span className="text-white">Casino</span>
-                  <span className="text-gradient">Hub</span>
+                  {siteParts.length >= 2 ? (
+                    <>
+                      <span className="text-white">{siteParts[0]}</span>
+                      <span className="text-gradient">{siteParts.slice(1).join("")}</span>
+                    </>
+                  ) : (
+                    <span className="text-gradient">{settings.siteName}</span>
+                  )}
                 </span>
               </Link>
               <p className="text-gray-400 text-sm leading-relaxed">
@@ -69,6 +81,8 @@ export default function Footer() {
                   <Link
                     key={link.name}
                     href={link.href}
+                    target={link.href !== "#" ? "_blank" : undefined}
+                    rel={link.href !== "#" ? "noopener noreferrer" : undefined}
                     className="px-4 py-2 rounded-lg bg-secondary text-gray-400 hover:text-gold hover:bg-secondary-light transition-all text-sm"
                   >
                     {link.name}
@@ -91,7 +105,7 @@ export default function Footer() {
           {/* Copyright */}
           <div className="pt-8 border-t border-white/5 flex flex-col md:flex-row items-center justify-between gap-4">
             <p className="text-gray-500 text-sm">
-              © {currentYear} CasinoHub. Tüm hakları saklıdır.
+              © {currentYear} {settings.siteName}. Tüm hakları saklıdır.
             </p>
             <div className="flex items-center gap-4">
               <span className="text-gray-600 text-xs">18+</span>

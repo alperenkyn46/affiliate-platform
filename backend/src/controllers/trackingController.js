@@ -2,13 +2,16 @@ const { query } = require("../config/database");
 const UAParser = require("ua-parser-js");
 const geoip = require("geoip-lite");
 
-// Mock ads for fallback
+// Mock ads for fallback (matches frontend mockAds)
 const mockAds = [
   { id: 1, link: "https://example.com/betking" },
   { id: 2, link: "https://example.com/royalbet" },
   { id: 3, link: "https://example.com/spinpalace" },
   { id: 4, link: "https://example.com/luckyslots" },
   { id: 5, link: "https://example.com/goldbet" },
+  { id: 6, link: "https://example.com/megacasino" },
+  { id: 7, link: "https://example.com/diamondbet" },
+  { id: 8, link: "https://example.com/vegasonline" },
 ];
 
 function getClientInfo(req) {

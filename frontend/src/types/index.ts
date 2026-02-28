@@ -4,12 +4,14 @@ export interface Ad {
   description: string;
   bonus: string;
   bonusDetails?: string;
+  bonus_details?: string; // Database field name
   image: string;
   link: string;
   position: number;
-  featured?: boolean;
+  featured?: boolean | number; // MySQL returns 0/1
   rating?: number;
-  tags?: string[];
+  tags?: string[] | string; // Can be JSON string from DB
+  status?: string;
 }
 
 export interface Visitor {

@@ -1,4 +1,20 @@
-const API_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:5000/api";
+function getApiUrl(): string {
+  // Server-side veya build time
+  if (typeof window === "undefined") {
+    return process.env.NEXT_PUBLIC_API_URL || "http://localhost:5000/api";
+  }
+  
+  // Client-side: Eğer localhost değilse, mevcut hostname'i kullan
+  const hostname = window.location.hostname;
+  if (hostname === "localhost" || hostname === "127.0.0.1") {
+    return process.env.NEXT_PUBLIC_API_URL || "http://localhost:5000/api";
+  }
+  
+  // LAN erişimi: Aynı hostname'i backend portuyla kullan
+  return `http://${hostname}:5000/api`;
+}
+
+const API_URL = getApiUrl();
 
 interface ApiResponse<T> {
   success: boolean;
@@ -29,6 +45,9 @@ async function fetchApi<T>(
 }
 
 export const api = {
+  // Public Settings (no auth)
+  getPublicSettings: () => fetchApi("/settings"),
+
   // Ads
   getAds: (params?: { featured?: boolean }) => {
     const query = params?.featured !== undefined ? `?featured=${params.featured}` : "";
@@ -95,6 +114,19 @@ export const api = {
       headers: { Authorization: `Bearer ${token}` },
     });
   },
+
+  // Settings
+  getSettings: (token: string) =>
+    fetchApi("/admin/settings", {
+      headers: { Authorization: `Bearer ${token}` },
+    }),
+
+  updateSettings: (token: string, data: Record<string, string>) =>
+    fetchApi("/admin/settings", {
+      method: "PUT",
+      headers: { Authorization: `Bearer ${token}` },
+      body: JSON.stringify(data),
+    }),
 };
 
 export default api;

@@ -9,13 +9,15 @@ const config: Config = {
   theme: {
     extend: {
       colors: {
-        background: "#0f0f0f",
-        secondary: "#1a1a1a",
-        "secondary-light": "#252525",
+        background: "var(--color-background)",
+        secondary: {
+          DEFAULT: "var(--color-secondary)",
+          light: "var(--color-secondary-light)",
+        },
         gold: {
-          DEFAULT: "#d4af37",
-          light: "#facc15",
-          dark: "#b8860b",
+          DEFAULT: "var(--color-gold)",
+          light: "var(--color-gold-light)",
+          dark: "var(--color-gold-dark)",
         },
         accent: {
           red: "#ef4444",
@@ -35,10 +37,10 @@ const config: Config = {
       keyframes: {
         "pulse-glow": {
           "0%, 100%": {
-            boxShadow: "0 0 20px rgba(212, 175, 55, 0.4)",
+            boxShadow: "0 0 20px var(--color-gold)",
           },
           "50%": {
-            boxShadow: "0 0 40px rgba(212, 175, 55, 0.8)",
+            boxShadow: "0 0 40px var(--color-gold)",
           },
         },
         "slide-up": {
@@ -55,8 +57,8 @@ const config: Config = {
         },
       },
       boxShadow: {
-        glow: "0 0 20px rgba(212, 175, 55, 0.4)",
-        "glow-lg": "0 0 40px rgba(212, 175, 55, 0.6)",
+        glow: "0 0 20px var(--color-gold)",
+        "glow-lg": "0 0 40px var(--color-gold)",
       },
     },
   },

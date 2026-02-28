@@ -21,4 +21,8 @@ router.get("/analytics", adminController.getAnalytics);
 router.get("/analytics/clicks", adminController.getClickAnalytics);
 router.get("/analytics/visitors", adminController.getVisitorAnalytics);
 
+// Settings
+router.get("/settings", adminController.getSettings);
+router.put("/settings", adminController.updateSettings);
+
 module.exports = router;

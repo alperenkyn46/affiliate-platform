@@ -43,6 +43,90 @@ const mockAds = [
     click_count: 1892,
     created_at: "2024-01-16",
   },
+  {
+    id: 3,
+    title: "SpinPalace",
+    description: "En yüksek oranlar burada",
+    bonus: "100 Freespin",
+    bonus_details: "Kayıt bonusu",
+    image: "/casinos/spinpalace.png",
+    link: "https://example.com/spinpalace",
+    position: 3,
+    status: "active",
+    featured: false,
+    click_count: 1245,
+    created_at: "2024-01-17",
+  },
+  {
+    id: 4,
+    title: "LuckySlots",
+    description: "Şansınızı deneyin",
+    bonus: "%100 Bonus",
+    bonus_details: "300₺'ye kadar",
+    image: "/casinos/luckyslots.png",
+    link: "https://example.com/luckyslots",
+    position: 4,
+    status: "active",
+    featured: false,
+    click_count: 987,
+    created_at: "2024-01-18",
+  },
+  {
+    id: 5,
+    title: "GoldBet",
+    description: "Altın değerinde kazançlar",
+    bonus: "%250 Hoşgeldin",
+    bonus_details: "2500₺'ye kadar",
+    image: "/casinos/goldbet.png",
+    link: "https://example.com/goldbet",
+    position: 5,
+    status: "active",
+    featured: true,
+    click_count: 1567,
+    created_at: "2024-01-19",
+  },
+  {
+    id: 6,
+    title: "MegaCasino",
+    description: "Mega ödüller sizi bekliyor",
+    bonus: "50 Freespin + %100",
+    bonus_details: "Kombine bonus",
+    image: "/casinos/megacasino.png",
+    link: "https://example.com/megacasino",
+    position: 6,
+    status: "active",
+    featured: false,
+    click_count: 756,
+    created_at: "2024-01-20",
+  },
+  {
+    id: 7,
+    title: "DiamondBet",
+    description: "Elmas gibi parlayan fırsatlar",
+    bonus: "%175 Yatırım Bonusu",
+    bonus_details: "750₺'ye kadar",
+    image: "/casinos/diamondbet.png",
+    link: "https://example.com/diamondbet",
+    position: 7,
+    status: "active",
+    featured: false,
+    click_count: 654,
+    created_at: "2024-01-21",
+  },
+  {
+    id: 8,
+    title: "VegasOnline",
+    description: "Vegas deneyimini evine getir",
+    bonus: "%300 Mega Bonus",
+    bonus_details: "3000₺'ye kadar",
+    image: "/casinos/vegasonline.png",
+    link: "https://example.com/vegasonline",
+    position: 8,
+    status: "active",
+    featured: true,
+    click_count: 1123,
+    created_at: "2024-01-22",
+  },
 ];
 
 const adminController = {
@@ -247,42 +331,50 @@ const adminController = {
   async getAnalytics(req, res) {
     try {
       const { start_date, end_date } = req.query;
+      
+      // Default: last 30 days
+      const defaultEnd = new Date().toISOString().split("T")[0];
+      const defaultStart = new Date(Date.now() - 30 * 24 * 60 * 60 * 1000).toISOString().split("T")[0];
+      
+      const startDate = start_date || defaultStart;
+      const endDate = end_date || defaultEnd;
 
       try {
         const clicks = await query(
           `SELECT DATE(created_at) as date, COUNT(*) as count 
            FROM clicks 
-           WHERE created_at BETWEEN ? AND ? 
+           WHERE DATE(created_at) BETWEEN ? AND ? 
            GROUP BY DATE(created_at) 
            ORDER BY date ASC`,
-          [start_date || "2024-01-01", end_date || new Date().toISOString().split("T")[0]]
+          [startDate, endDate]
         );
 
         const visitors = await query(
           `SELECT DATE(created_at) as date, COUNT(*) as count 
            FROM visitors 
-           WHERE created_at BETWEEN ? AND ? 
+           WHERE DATE(created_at) BETWEEN ? AND ? 
            GROUP BY DATE(created_at) 
            ORDER BY date ASC`,
-          [start_date || "2024-01-01", end_date || new Date().toISOString().split("T")[0]]
+          [startDate, endDate]
         );
 
-        res.json({ success: true, data: { clicks, visitors } });
+        // Format dates for frontend
+        const formattedClicks = clicks.map(c => ({
+          date: c.date instanceof Date ? c.date.toISOString().split("T")[0] : c.date,
+          count: c.count
+        }));
+        
+        const formattedVisitors = visitors.map(v => ({
+          date: v.date instanceof Date ? v.date.toISOString().split("T")[0] : v.date,
+          count: v.count
+        }));
+
+        res.json({ success: true, data: { clicks: formattedClicks, visitors: formattedVisitors } });
       } catch (dbError) {
+        console.error("Analytics DB error:", dbError);
         res.json({
           success: true,
-          data: {
-            clicks: [
-              { date: "2024-01-15", count: 45 },
-              { date: "2024-01-16", count: 52 },
-              { date: "2024-01-17", count: 61 },
-            ],
-            visitors: [
-              { date: "2024-01-15", count: 120 },
-              { date: "2024-01-16", count: 145 },
-              { date: "2024-01-17", count: 167 },
-            ],
-          },
+          data: { clicks: [], visitors: [] },
         });
       }
     } catch (error) {
@@ -355,6 +447,73 @@ const adminController = {
     } catch (error) {
       console.error("Visitor analytics error:", error);
       res.status(500).json({ success: false, error: "Failed to fetch visitor analytics" });
+    }
+  },
+
+  // Settings
+  async getSettings(req, res) {
+    try {
+      const settings = await query("SELECT key_name, value FROM site_settings");
+      
+      // Convert array to object
+      const settingsObj = {};
+      settings.forEach(s => {
+        settingsObj[s.key_name] = s.value;
+      });
+
+      res.json({ 
+        success: true, 
+        data: {
+          siteName: settingsObj.site_name || "CasinoHub",
+          siteDescription: settingsObj.site_description || "",
+          primaryColor: settingsObj.primary_color || "#d4af37",
+          secondaryColor: settingsObj.secondary_color || "#1a1a1a",
+          footerText: settingsObj.footer_text || "",
+          socialDiscord: settingsObj.social_discord || "#",
+          socialTelegram: settingsObj.social_telegram || "#",
+          socialTwitch: settingsObj.social_twitch || "#",
+          socialKick: settingsObj.social_kick || "#",
+          socialYoutube: settingsObj.social_youtube || "#",
+        }
+      });
+    } catch (error) {
+      console.error("Get settings error:", error);
+      res.status(500).json({ success: false, error: "Failed to fetch settings" });
+    }
+  },
+
+  async updateSettings(req, res) {
+    try {
+      const { 
+        siteName, primaryColor, secondaryColor, 
+        socialDiscord, socialTelegram, socialTwitch, socialKick, socialYoutube 
+      } = req.body;
+
+      // Update each setting
+      const updates = [
+        ["site_name", siteName],
+        ["primary_color", primaryColor],
+        ["secondary_color", secondaryColor],
+        ["social_discord", socialDiscord],
+        ["social_telegram", socialTelegram],
+        ["social_twitch", socialTwitch],
+        ["social_kick", socialKick],
+        ["social_youtube", socialYoutube],
+      ];
+
+      for (const [key, value] of updates) {
+        if (value !== undefined) {
+          await query(
+            "INSERT INTO site_settings (key_name, value) VALUES (?, ?) ON DUPLICATE KEY UPDATE value = ?",
+            [key, value, value]
+          );
+        }
+      }
+
+      res.json({ success: true, message: "Settings updated successfully" });
+    } catch (error) {
+      console.error("Update settings error:", error);
+      res.status(500).json({ success: false, error: "Failed to update settings" });
     }
   },
 };
