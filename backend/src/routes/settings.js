@@ -26,6 +26,12 @@ router.get("/", async (req, res) => {
         socialTwitch: settingsObj.social_twitch || "#",
         socialKick: settingsObj.social_kick || "#",
         socialYoutube: settingsObj.social_youtube || "#",
+        promotionAdId: settingsObj.promotion_ad_id || "",
+        promotionTitle: settingsObj.promotion_title || "",
+        promotionDescription: settingsObj.promotion_description || "",
+        exitPopupAdId: settingsObj.exit_popup_ad_id || "",
+        exitPopupTitle: settingsObj.exit_popup_title || "",
+        exitPopupDescription: settingsObj.exit_popup_description || "",
       }
     });
   } catch (error) {
@@ -42,6 +48,12 @@ router.get("/", async (req, res) => {
         socialTwitch: "#",
         socialKick: "#",
         socialYoutube: "#",
+        promotionAdId: "",
+        promotionTitle: "",
+        promotionDescription: "",
+        exitPopupAdId: "",
+        exitPopupTitle: "",
+        exitPopupDescription: "",
       }
     });
   }

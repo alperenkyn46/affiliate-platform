@@ -2,6 +2,7 @@ const express = require("express");
 const router = express.Router();
 const adminController = require("../controllers/adminController");
 const authMiddleware = require("../middleware/authMiddleware");
+const { requireRole } = require("../middleware/roleMiddleware");
 
 // All admin routes require authentication
 router.use(authMiddleware);
@@ -13,7 +14,7 @@ router.get("/dashboard", adminController.getDashboard);
 router.get("/ads", adminController.getAllAds);
 router.post("/ads", adminController.createAd);
 router.put("/ads/:id", adminController.updateAd);
-router.delete("/ads/:id", adminController.deleteAd);
+router.delete("/ads/:id", requireRole("super_admin", "admin"), adminController.deleteAd);
 router.put("/ads/:id/position", adminController.updateAdPosition);
 
 // Analytics
@@ -21,8 +22,35 @@ router.get("/analytics", adminController.getAnalytics);
 router.get("/analytics/clicks", adminController.getClickAnalytics);
 router.get("/analytics/visitors", adminController.getVisitorAnalytics);
 
+// Advanced Analytics
+router.get("/analytics/conversions", adminController.getConversionAnalytics);
+router.get("/analytics/funnel", adminController.getFunnelAnalytics);
+
 // Settings
-router.get("/settings", adminController.getSettings);
-router.put("/settings", adminController.updateSettings);
+router.get("/settings", requireRole("super_admin", "admin"), adminController.getSettings);
+router.put("/settings", requireRole("super_admin"), adminController.updateSettings);
+
+// Blog Management
+router.get("/blog", adminController.getBlogPosts);
+router.post("/blog", adminController.createBlogPost);
+router.put("/blog/:id", adminController.updateBlogPost);
+router.delete("/blog/:id", requireRole("super_admin", "admin"), adminController.deleteBlogPost);
+
+// Reviews
+router.get("/reviews", adminController.getReviews);
+router.put("/reviews/:id", adminController.updateReviewStatus);
+
+// API Stats
+router.get("/api-stats", adminController.getApiStats);
+
+// Affiliate Management
+router.get("/affiliates", adminController.getAffiliates);
+router.post("/affiliates", adminController.createAffiliate);
+router.put("/affiliates/:id", adminController.updateAffiliate);
+router.delete("/affiliates/:id", adminController.deleteAffiliate);
+
+// Backups
+router.get("/backups", adminController.getBackups);
+router.post("/backups", adminController.createBackup);
 
 module.exports = router;

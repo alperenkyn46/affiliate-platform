@@ -8,4 +8,7 @@ router.get("/go/:id", trackingController.handleRedirect);
 // Record visitor
 router.post("/visitors", trackingController.recordVisitor);
 
+// Recent clicks for live ticker
+router.get("/recent-clicks", trackingController.getRecentClicks);
+
 module.exports = router;

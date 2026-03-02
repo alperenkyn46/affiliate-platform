@@ -3,3 +3,4 @@ export { default as FeaturedSection } from "./FeaturedSection";
 export { default as CasinoListSection } from "./CasinoListSection";
 export { default as PromotionBanner } from "./PromotionBanner";
 export { default as TrustSection } from "./TrustSection";
+export { default as HowItWorksSection } from "./HowItWorksSection";

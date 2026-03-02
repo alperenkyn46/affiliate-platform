@@ -3,17 +3,19 @@
 import Link from "next/link";
 import Container from "./Container";
 import { useSettings } from "@/contexts/SettingsContext";
-
-const footerLinks = [
-  { name: "Gizlilik Politikası", href: "#" },
-  { name: "Kullanım Şartları", href: "#" },
-  { name: "Sorumlu Oyun", href: "#" },
-  { name: "İletişim", href: "#" },
-];
+import { useLanguage } from "@/contexts/LanguageContext";
 
 export default function Footer() {
   const currentYear = new Date().getFullYear();
   const { settings } = useSettings();
+  const { t } = useLanguage();
+
+  const footerLinks = [
+    { name: t("nav.privacy"), href: "/privacy" },
+    { name: t("nav.terms"), href: "/terms" },
+    { name: t("nav.about"), href: "/about" },
+    { name: t("nav.contact"), href: "/contact" },
+  ];
 
   const socialLinks = [
     { name: "Discord", href: settings.socialDiscord },
@@ -58,7 +60,7 @@ export default function Footer() {
 
             {/* Quick Links */}
             <div>
-              <h4 className="text-white font-semibold mb-4">Hızlı Linkler</h4>
+              <h4 className="text-white font-semibold mb-4">{t("footer.quickLinks")}</h4>
               <ul className="space-y-2">
                 {footerLinks.map((link) => (
                   <li key={link.name}>
@@ -75,7 +77,7 @@ export default function Footer() {
 
             {/* Social */}
             <div>
-              <h4 className="text-white font-semibold mb-4">Bizi Takip Edin</h4>
+              <h4 className="text-white font-semibold mb-4">{t("footer.followUs")}</h4>
               <div className="flex flex-wrap gap-2">
                 {socialLinks.map((link) => (
                   <Link
@@ -95,22 +97,19 @@ export default function Footer() {
           {/* Disclaimer */}
           <div className="p-4 rounded-lg bg-background/50 border border-white/5 mb-8">
             <p className="text-gray-500 text-xs leading-relaxed">
-              <strong className="text-gray-400">Uyarı:</strong> Bu site yalnızca 18 yaş ve üzeri bireyler içindir. 
-              Kumar bağımlılık yapabilir. Lütfen sorumlu oynayın. Listelenen siteler bağımsız operatörler tarafından 
-              işletilmektedir ve bu platformla doğrudan bağlantıları yoktur. Oyun oynamadan önce yerel yasalarınızı 
-              kontrol edin.
+              {t("footer.disclaimer")}
             </p>
           </div>
 
           {/* Copyright */}
           <div className="pt-8 border-t border-white/5 flex flex-col md:flex-row items-center justify-between gap-4">
             <p className="text-gray-500 text-sm">
-              © {currentYear} {settings.siteName}. Tüm hakları saklıdır.
+              © {currentYear} {settings.siteName}. {t("footer.rights")}
             </p>
             <div className="flex items-center gap-4">
               <span className="text-gray-600 text-xs">18+</span>
               <span className="text-gray-600 text-xs">|</span>
-              <span className="text-gray-600 text-xs">Sorumlu Oyun</span>
+              <span className="text-gray-600 text-xs">{t("footer.responsibleGaming")}</span>
             </div>
           </div>
         </div>

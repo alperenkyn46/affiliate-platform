@@ -17,6 +17,7 @@ const mockAds = [
 function getClientInfo(req) {
   // Get IP address
   const ip =
+    req.headers["cf-connecting-ip"] ||
     req.headers["x-forwarded-for"]?.split(",")[0]?.trim() ||
     req.headers["x-real-ip"] ||
     req.connection?.remoteAddress ||
@@ -64,6 +65,22 @@ const trackingController = {
              VALUES (?, ?, ?, ?, ?, ?, NOW())`,
             [id, clientInfo.ip, clientInfo.device, clientInfo.browser, clientInfo.country, referrer]
           );
+
+          // Track affiliate click
+          const ref = req.query.ref;
+          if (ref) {
+            try {
+              const affiliates = await query("SELECT id FROM affiliates WHERE tracking_code = ? AND status = 'active'", [ref]);
+              if (affiliates.length > 0) {
+                await query(
+                  "INSERT INTO affiliate_clicks (affiliate_id, ad_id, ip, country, created_at) VALUES (?, ?, ?, ?, NOW())",
+                  [affiliates[0].id, id, clientInfo.ip, clientInfo.country]
+                );
+              }
+            } catch (affErr) {
+              console.log("Affiliate click tracking error:", affErr.message);
+            }
+          }
         }
       } catch (dbError) {
         // Fallback to mock data
@@ -105,6 +122,21 @@ const trackingController = {
     } catch (error) {
       console.error("Error recording visitor:", error);
       res.status(500).json({ success: false, error: "Failed to record visitor" });
+    }
+  },
+
+  async getRecentClicks(req, res) {
+    try {
+      const clicks = await query(
+        `SELECT c.id, a.title as ad_title, c.country, c.created_at 
+         FROM clicks c 
+         JOIN ads a ON c.ad_id = a.id 
+         ORDER BY c.created_at DESC 
+         LIMIT 20`
+      );
+      res.json({ success: true, data: clicks });
+    } catch (error) {
+      res.json({ success: true, data: [] });
     }
   },
 };

@@ -5,6 +5,8 @@ import Link from "next/link";
 import Container from "./Container";
 import { cn } from "@/lib/utils";
 import { useSettings } from "@/contexts/SettingsContext";
+import ThemeToggle from "@/components/ui/ThemeToggle";
+import LanguageSwitcher from "@/components/ui/LanguageSwitcher";
 
 const socialIcons = {
   discord: (
@@ -85,6 +87,9 @@ export default function Header() {
                 {link.icon}
               </Link>
             ))}
+            <div className="w-px h-6 bg-white/10 mx-2" />
+            <ThemeToggle />
+            <LanguageSwitcher />
           </nav>
 
           {/* Mobile Menu Button */}
@@ -122,6 +127,8 @@ export default function Header() {
                 {link.icon}
               </Link>
             ))}
+            <ThemeToggle />
+            <LanguageSwitcher />
           </div>
         </div>
       </Container>

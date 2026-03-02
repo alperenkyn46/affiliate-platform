@@ -12,11 +12,12 @@ const demoAdmin = {
   username: "admin",
   email: "admin@example.com",
   password: bcrypt.hashSync("admin123", 10),
+  role: "super_admin",
 };
 
 function generateToken(user) {
   return jwt.sign(
-    { id: user.id, username: user.username },
+    { id: user.id, username: user.username, role: user.role || "admin" },
     JWT_SECRET,
     { expiresIn: JWT_EXPIRES_IN }
   );
@@ -103,6 +104,7 @@ const authController = {
             id: user.id,
             username: user.username,
             email: user.email,
+            role: user.role || "admin",
           },
         },
       });
@@ -167,7 +169,7 @@ const authController = {
       const decoded = jwt.verify(token, JWT_SECRET);
 
       try {
-        const users = await query("SELECT id, username, email FROM admin_users WHERE id = ?", [
+        const users = await query("SELECT id, username, email, role FROM admin_users WHERE id = ?", [
           decoded.id,
         ]);
         if (users.length === 0) {
@@ -175,7 +177,7 @@ const authController = {
           if (decoded.id === demoAdmin.id) {
             return res.json({
               success: true,
-              data: { id: demoAdmin.id, username: demoAdmin.username, email: demoAdmin.email },
+              data: { id: demoAdmin.id, username: demoAdmin.username, email: demoAdmin.email, role: demoAdmin.role },
             });
           }
           return res.status(404).json({ success: false, error: "User not found" });
@@ -186,7 +188,7 @@ const authController = {
         if (decoded.id === demoAdmin.id) {
           return res.json({
             success: true,
-            data: { id: demoAdmin.id, username: demoAdmin.username, email: demoAdmin.email },
+            data: { id: demoAdmin.id, username: demoAdmin.username, email: demoAdmin.email, role: demoAdmin.role },
           });
         }
         res.status(500).json({ success: false, error: "Database error" });

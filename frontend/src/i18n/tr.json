@@ -1,0 +1,69 @@
+{
+  "nav": {
+    "home": "Ana Sayfa",
+    "blog": "Blog",
+    "about": "Hakkımızda",
+    "contact": "İletişim",
+    "privacy": "Gizlilik Politikası",
+    "terms": "Kullanım Şartları"
+  },
+  "hero": {
+    "badge": "2024'ün En İyi Bonusları",
+    "title1": "En Yüksek ",
+    "title2": "Casino Bonusları",
+    "title3": " Burada",
+    "subtitle": "Türkiye'nin en güvenilir casino sitelerini karşılaştırın. Özel hoşgeldin bonusları ve freespin fırsatlarını kaçırmayın!",
+    "cta": "Bonusları Keşfet",
+    "howItWorks": "Nasıl Çalışır?",
+    "statCasinos": "Casino Sitesi",
+    "statMembers": "Mutlu Üye",
+    "statBonus": "Bonus Dağıtıldı"
+  },
+  "howItWorks": {
+    "title": "Nasıl Çalışır?",
+    "subtitle": "4 basit adımda en iyi casino bonuslarından yararlanmaya başlayın",
+    "step1Title": "Casino Seçin",
+    "step1Desc": "Listemizden size en uygun casino sitesini seçin.",
+    "step2Title": "Kayıt Olun",
+    "step2Desc": "Seçtiğiniz casino sitesine özel bağlantımız üzerinden kayıt olun.",
+    "step3Title": "Bonus Alın",
+    "step3Desc": "Hoşgeldin bonusunuz hesabınıza tanımlanacaktır.",
+    "step4Title": "Kazanmaya Başlayın",
+    "step4Desc": "Favori oyunlarınızı oynayın ve kazançlarınızı çekin."
+  },
+  "trust": {
+    "title": "Neden Bizi Tercih Etmelisiniz?",
+    "licensed": "Lisanslı Siteler",
+    "licensedDesc": "Tüm sitelerimiz lisanslı ve denetlenen operatörlerdir",
+    "secure": "Güvenli Ödeme",
+    "secureDesc": "256-bit SSL şifreleme ile güvenli işlemler",
+    "fast": "Hızlı Çekim",
+    "fastDesc": "24 saat içinde kazançlarınızı çekin",
+    "support": "7/24 Destek",
+    "supportDesc": "Her zaman yanınızdayız"
+  },
+  "sections": {
+    "featured": "Öne Çıkan Casinolar",
+    "allCasinos": "Tüm Casino Siteleri",
+    "spinWheel": "Bonus Çarkını Çevir!"
+  },
+  "footer": {
+    "quickLinks": "Hızlı Linkler",
+    "followUs": "Bizi Takip Edin",
+    "disclaimer": "Bu site yalnızca 18 yaş ve üzeri bireyler içindir. Kumar bağımlılık yapabilir. Lütfen sorumlu oynayın.",
+    "rights": "Tüm hakları saklıdır.",
+    "responsibleGaming": "Sorumlu Oyun"
+  },
+  "common": {
+    "loading": "Yükleniyor...",
+    "error": "Bir hata oluştu",
+    "submit": "Gönder",
+    "cancel": "İptal",
+    "save": "Kaydet",
+    "delete": "Sil",
+    "edit": "Düzenle",
+    "back": "Geri",
+    "next": "İleri",
+    "language": "Dil"
+  }
+}

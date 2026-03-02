@@ -38,9 +38,11 @@ export default function HeroSection() {
             <Button size="lg" glow>
               Bonusları Keşfet
             </Button>
-            <Button size="lg" variant="outline">
-              Nasıl Çalışır?
-            </Button>
+            <a href="#how-it-works">
+              <Button size="lg" variant="outline">
+                Nasıl Çalışır?
+              </Button>
+            </a>
           </div>
 
           {/* Stats */}

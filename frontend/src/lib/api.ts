@@ -115,6 +115,17 @@ export const api = {
     });
   },
 
+  // Advanced Analytics
+  getConversionAnalytics: (token: string) =>
+    fetchApi("/admin/analytics/conversions", {
+      headers: { Authorization: `Bearer ${token}` },
+    }),
+
+  getFunnelAnalytics: (token: string) =>
+    fetchApi("/admin/analytics/funnel", {
+      headers: { Authorization: `Bearer ${token}` },
+    }),
+
   // Settings
   getSettings: (token: string) =>
     fetchApi("/admin/settings", {
@@ -126,6 +137,120 @@ export const api = {
       method: "PUT",
       headers: { Authorization: `Bearer ${token}` },
       body: JSON.stringify(data),
+    }),
+
+  submitContact: (data: { name: string; email: string; subject: string; message: string }) =>
+    fetchApi("/contact", {
+      method: "POST",
+      body: JSON.stringify(data),
+    }),
+
+  // Blog
+  getBlogPosts: (params?: { category?: string; limit?: number; offset?: number; q?: string }) => {
+    const query = new URLSearchParams();
+    if (params?.category) query.append("category", params.category);
+    if (params?.limit) query.append("limit", params.limit.toString());
+    if (params?.offset) query.append("offset", params.offset.toString());
+    if (params?.q) query.append("q", params.q);
+    return fetchApi(`/blog?${query}`);
+  },
+
+  getBlogPost: (slug: string) => fetchApi(`/blog/${slug}`),
+
+  getBlogCategories: () => fetchApi("/blog/categories"),
+
+  // Admin Blog
+  getAdminBlogPosts: (token: string) =>
+    fetchApi("/admin/blog", {
+      headers: { Authorization: `Bearer ${token}` },
+    }),
+
+  createBlogPost: (token: string, data: Record<string, unknown>) =>
+    fetchApi("/admin/blog", {
+      method: "POST",
+      headers: { Authorization: `Bearer ${token}` },
+      body: JSON.stringify(data),
+    }),
+
+  updateBlogPost: (token: string, id: number, data: Record<string, unknown>) =>
+    fetchApi(`/admin/blog/${id}`, {
+      method: "PUT",
+      headers: { Authorization: `Bearer ${token}` },
+      body: JSON.stringify(data),
+    }),
+
+  deleteBlogPost: (token: string, id: number) =>
+    fetchApi(`/admin/blog/${id}`, {
+      method: "DELETE",
+      headers: { Authorization: `Bearer ${token}` },
+    }),
+
+  // Live Ticker
+  getRecentClicks: () => fetchApi("/recent-clicks"),
+
+  // Reviews
+  getReviews: (adId: number) => fetchApi(`/reviews/${adId}`),
+
+  submitReview: (data: { ad_id: number; author_name: string; author_email?: string; rating: number; comment?: string }) =>
+    fetchApi("/reviews", {
+      method: "POST",
+      body: JSON.stringify(data),
+    }),
+
+  getAdminReviews: (token: string) =>
+    fetchApi("/admin/reviews", {
+      headers: { Authorization: `Bearer ${token}` },
+    }),
+
+  updateReviewStatus: (token: string, id: number, status: string) =>
+    fetchApi(`/admin/reviews/${id}`, {
+      method: "PUT",
+      headers: { Authorization: `Bearer ${token}` },
+      body: JSON.stringify({ status }),
+    }),
+
+  // API Stats
+  getApiStats: (token: string) =>
+    fetchApi("/admin/api-stats", {
+      headers: { Authorization: `Bearer ${token}` },
+    }),
+
+  // Affiliate
+  getAdminAffiliates: (token: string) =>
+    fetchApi("/admin/affiliates", {
+      headers: { Authorization: `Bearer ${token}` },
+    }),
+
+  createAffiliate: (token: string, data: Record<string, unknown>) =>
+    fetchApi("/admin/affiliates", {
+      method: "POST",
+      headers: { Authorization: `Bearer ${token}` },
+      body: JSON.stringify(data),
+    }),
+
+  updateAffiliate: (token: string, id: number, data: Record<string, unknown>) =>
+    fetchApi(`/admin/affiliates/${id}`, {
+      method: "PUT",
+      headers: { Authorization: `Bearer ${token}` },
+      body: JSON.stringify(data),
+    }),
+
+  deleteAffiliate: (token: string, id: number) =>
+    fetchApi(`/admin/affiliates/${id}`, {
+      method: "DELETE",
+      headers: { Authorization: `Bearer ${token}` },
+    }),
+
+  // Backups
+  getBackups: (token: string) =>
+    fetchApi("/admin/backups", {
+      headers: { Authorization: `Bearer ${token}` },
+    }),
+
+  createBackup: (token: string) =>
+    fetchApi("/admin/backups", {
+      method: "POST",
+      headers: { Authorization: `Bearer ${token}` },
     }),
 };
 

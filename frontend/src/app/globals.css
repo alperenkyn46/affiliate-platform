@@ -8,9 +8,19 @@
   --color-gold: #d4af37;
   --color-gold-light: #f5d65a;
   --color-gold-dark: #b8972e;
+  --color-background: #f5f5f5;
+  --color-secondary: #ffffff;
+  --color-secondary-light: #f0f0f0;
+  --color-text: #1a1a1a;
+  --color-text-secondary: #666666;
+}
+
+.dark {
   --color-background: #0f0f0f;
   --color-secondary: #1a1a1a;
   --color-secondary-light: #252525;
+  --color-text: #ffffff;
+  --color-text-secondary: #9ca3af;
 }
 
 @layer base {
@@ -19,8 +29,9 @@
   }
 
   body {
-    @apply text-white font-sans antialiased;
+    @apply font-sans antialiased;
     background-color: var(--color-background);
+    color: var(--color-text);
   }
 
   ::selection {

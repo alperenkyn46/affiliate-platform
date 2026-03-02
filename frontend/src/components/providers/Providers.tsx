@@ -1,20 +1,29 @@
 "use client";
 
-import { ReactNode } from "react";
+import { ReactNode, useEffect } from "react";
 import { SettingsProvider } from "@/contexts/SettingsContext";
 import { AuthProvider } from "@/contexts/AuthContext";
+import { LanguageProvider } from "@/contexts/LanguageContext";
 import ThemeProvider from "./ThemeProvider";
 import VisitorTracker from "./VisitorTracker";
 
 export default function Providers({ children }: { children: ReactNode }) {
+  useEffect(() => {
+    if ("serviceWorker" in navigator) {
+      navigator.serviceWorker.register("/sw.js").catch(() => {});
+    }
+  }, []);
+
   return (
-    <SettingsProvider>
-      <AuthProvider>
-        <ThemeProvider>
-          <VisitorTracker />
-          {children}
-        </ThemeProvider>
-      </AuthProvider>
-    </SettingsProvider>
+    <LanguageProvider>
+      <SettingsProvider>
+        <AuthProvider>
+          <ThemeProvider>
+            <VisitorTracker />
+            {children}
+          </ThemeProvider>
+        </AuthProvider>
+      </SettingsProvider>
+    </LanguageProvider>
   );
 }

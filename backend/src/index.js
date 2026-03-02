@@ -10,8 +10,13 @@ const trackingRoutes = require("./routes/tracking");
 const authRoutes = require("./routes/auth");
 const adminRoutes = require("./routes/admin");
 const settingsRoutes = require("./routes/settings");
+const contactRoutes = require("./routes/contact");
+const blogRoutes = require("./routes/blog");
+const reviewsRoutes = require("./routes/reviews");
+const affiliateRoutes = require("./routes/affiliate");
 
 const app = express();
+app.set("trust proxy", true);
 const PORT = process.env.PORT || 5000;
 
 // Security Middleware
@@ -64,12 +69,19 @@ app.use(express.urlencoded({ extended: true }));
 // Logging
 app.use(morgan("dev"));
 
+const apiLogger = require("./middleware/apiLogger");
+app.use("/api/", apiLogger);
+
 // Routes
 app.use("/api/ads", adsRoutes);
 app.use("/api", trackingRoutes);
 app.use("/api/auth", authRoutes);
 app.use("/api/admin", adminRoutes);
 app.use("/api/settings", settingsRoutes);
+app.use("/api/contact", contactRoutes);
+app.use("/api/blog", blogRoutes);
+app.use("/api/reviews", reviewsRoutes);
+app.use("/api/affiliate", affiliateRoutes);
 
 // Health Check
 app.get("/api/health", (req, res) => {
@@ -97,4 +109,16 @@ app.listen(PORT, async () => {
   // Test database connection
   const { testConnection } = require("./config/database");
   await testConnection();
+
+  const { setupDailyStatsJob } = require("./jobs/dailyStats");
+  setupDailyStatsJob();
+
+  const { setupEmailJobs } = require("./jobs/emailReports");
+  setupEmailJobs();
+
+  const { setupAdSchedulerJob } = require("./jobs/adScheduler");
+  setupAdSchedulerJob();
+
+  const { setupBackupJob } = require("./jobs/backup");
+  setupBackupJob();
 });

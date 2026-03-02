@@ -8,6 +8,7 @@ import {
   CasinoListSection,
   PromotionBanner,
   TrustSection,
+  HowItWorksSection,
 } from "@/components/sections";
 import { LiveTicker, BonusWheel, ExitPopup } from "@/components/features";
 import { api } from "@/lib/api";
@@ -54,6 +55,9 @@ export default function Home() {
       <main className="flex-1">
         {/* Hero Section */}
         <HeroSection />
+
+        {/* How It Works */}
+        <HowItWorksSection />
 
         {/* Trust Badges */}
         <TrustSection />

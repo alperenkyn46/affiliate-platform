@@ -12,6 +12,12 @@ interface SiteSettings {
   socialTwitch: string;
   socialKick: string;
   socialYoutube: string;
+  promotionAdId: string;
+  promotionTitle: string;
+  promotionDescription: string;
+  exitPopupAdId: string;
+  exitPopupTitle: string;
+  exitPopupDescription: string;
 }
 
 interface SettingsContextType {
@@ -29,6 +35,12 @@ const defaultSettings: SiteSettings = {
   socialTwitch: "#",
   socialKick: "#",
   socialYoutube: "#",
+  promotionAdId: "",
+  promotionTitle: "",
+  promotionDescription: "",
+  exitPopupAdId: "",
+  exitPopupTitle: "",
+  exitPopupDescription: "",
 };
 
 const SettingsContext = createContext<SettingsContextType>({

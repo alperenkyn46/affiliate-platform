@@ -1,0 +1,69 @@
+{
+  "nav": {
+    "home": "Home",
+    "blog": "Blog",
+    "about": "About Us",
+    "contact": "Contact",
+    "privacy": "Privacy Policy",
+    "terms": "Terms of Use"
+  },
+  "hero": {
+    "badge": "Best Bonuses of 2024",
+    "title1": "The Highest ",
+    "title2": "Casino Bonuses",
+    "title3": " Are Here",
+    "subtitle": "Compare the most trusted casino sites. Don't miss exclusive welcome bonuses and free spin opportunities!",
+    "cta": "Explore Bonuses",
+    "howItWorks": "How It Works?",
+    "statCasinos": "Casino Sites",
+    "statMembers": "Happy Members",
+    "statBonus": "Bonuses Distributed"
+  },
+  "howItWorks": {
+    "title": "How It Works?",
+    "subtitle": "Start benefiting from the best casino bonuses in 4 simple steps",
+    "step1Title": "Choose a Casino",
+    "step1Desc": "Pick the best casino site for you from our list.",
+    "step2Title": "Sign Up",
+    "step2Desc": "Register through our special link at your chosen casino.",
+    "step3Title": "Get Your Bonus",
+    "step3Desc": "Your welcome bonus will be credited to your account.",
+    "step4Title": "Start Winning",
+    "step4Desc": "Play your favorite games and withdraw your winnings."
+  },
+  "trust": {
+    "title": "Why Choose Us?",
+    "licensed": "Licensed Sites",
+    "licensedDesc": "All our sites are licensed and regulated operators",
+    "secure": "Secure Payments",
+    "secureDesc": "Secure transactions with 256-bit SSL encryption",
+    "fast": "Fast Withdrawals",
+    "fastDesc": "Withdraw your winnings within 24 hours",
+    "support": "24/7 Support",
+    "supportDesc": "Always here for you"
+  },
+  "sections": {
+    "featured": "Featured Casinos",
+    "allCasinos": "All Casino Sites",
+    "spinWheel": "Spin the Bonus Wheel!"
+  },
+  "footer": {
+    "quickLinks": "Quick Links",
+    "followUs": "Follow Us",
+    "disclaimer": "This site is for individuals aged 18 and over only. Gambling can be addictive. Please play responsibly.",
+    "rights": "All rights reserved.",
+    "responsibleGaming": "Responsible Gaming"
+  },
+  "common": {
+    "loading": "Loading...",
+    "error": "An error occurred",
+    "submit": "Submit",
+    "cancel": "Cancel",
+    "save": "Save",
+    "delete": "Delete",
+    "edit": "Edit",
+    "back": "Back",
+    "next": "Next",
+    "language": "Language"
+  }
+}

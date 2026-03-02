@@ -15,6 +15,12 @@ interface Settings {
   socialTwitch: string;
   socialKick: string;
   socialYoutube: string;
+  promotionAdId: string;
+  promotionTitle: string;
+  promotionDescription: string;
+  exitPopupAdId: string;
+  exitPopupTitle: string;
+  exitPopupDescription: string;
 }
 
 export default function SettingsPage() {
@@ -28,6 +34,12 @@ export default function SettingsPage() {
     socialTwitch: "#",
     socialKick: "#",
     socialYoutube: "#",
+    promotionAdId: "",
+    promotionTitle: "",
+    promotionDescription: "",
+    exitPopupAdId: "",
+    exitPopupTitle: "",
+    exitPopupDescription: "",
   });
   const [isLoading, setIsLoading] = useState(true);
   const [isSaving, setIsSaving] = useState(false);
@@ -226,6 +238,93 @@ export default function SettingsPage() {
                 className="w-full px-4 py-3 rounded-lg bg-background border border-white/10 text-white focus:outline-none focus:border-gold/50"
                 placeholder="https://youtube.com/..."
               />
+            </div>
+          </div>
+        </div>
+
+        {/* Promotion & Popup Settings */}
+        <div className="bg-secondary rounded-xl p-6 border border-white/5 lg:col-span-2">
+          <h3 className="text-lg font-semibold text-white mb-6">Promosyon & Popup Ayarları</h3>
+
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+            <div className="space-y-4">
+              <h4 className="text-sm font-medium text-gold">Promosyon Banner</h4>
+              <div>
+                <label className="block text-sm font-medium text-gray-300 mb-2">
+                  Reklam ID (Ad ID)
+                </label>
+                <input
+                  type="text"
+                  value={settings.promotionAdId}
+                  onChange={(e) => setSettings({ ...settings, promotionAdId: e.target.value })}
+                  className="w-full px-4 py-3 rounded-lg bg-background border border-white/10 text-white focus:outline-none focus:border-gold/50"
+                  placeholder="Yönlendirilecek reklam ID'si"
+                />
+              </div>
+              <div>
+                <label className="block text-sm font-medium text-gray-300 mb-2">
+                  Başlık
+                </label>
+                <input
+                  type="text"
+                  value={settings.promotionTitle}
+                  onChange={(e) => setSettings({ ...settings, promotionTitle: e.target.value })}
+                  className="w-full px-4 py-3 rounded-lg bg-background border border-white/10 text-white focus:outline-none focus:border-gold/50"
+                  placeholder="Özel Kayıt Bonusu"
+                />
+              </div>
+              <div>
+                <label className="block text-sm font-medium text-gray-300 mb-2">
+                  Açıklama
+                </label>
+                <input
+                  type="text"
+                  value={settings.promotionDescription}
+                  onChange={(e) => setSettings({ ...settings, promotionDescription: e.target.value })}
+                  className="w-full px-4 py-3 rounded-lg bg-background border border-white/10 text-white focus:outline-none focus:border-gold/50"
+                  placeholder="İlk üyeliğinize özel %300 hoşgeldin bonusu!"
+                />
+              </div>
+            </div>
+
+            <div className="space-y-4">
+              <h4 className="text-sm font-medium text-gold">Exit Popup</h4>
+              <div>
+                <label className="block text-sm font-medium text-gray-300 mb-2">
+                  Reklam ID (Ad ID)
+                </label>
+                <input
+                  type="text"
+                  value={settings.exitPopupAdId}
+                  onChange={(e) => setSettings({ ...settings, exitPopupAdId: e.target.value })}
+                  className="w-full px-4 py-3 rounded-lg bg-background border border-white/10 text-white focus:outline-none focus:border-gold/50"
+                  placeholder="Yönlendirilecek reklam ID'si"
+                />
+              </div>
+              <div>
+                <label className="block text-sm font-medium text-gray-300 mb-2">
+                  Başlık
+                </label>
+                <input
+                  type="text"
+                  value={settings.exitPopupTitle}
+                  onChange={(e) => setSettings({ ...settings, exitPopupTitle: e.target.value })}
+                  className="w-full px-4 py-3 rounded-lg bg-background border border-white/10 text-white focus:outline-none focus:border-gold/50"
+                  placeholder="Özel Fırsatı Kaçırma!"
+                />
+              </div>
+              <div>
+                <label className="block text-sm font-medium text-gray-300 mb-2">
+                  Açıklama
+                </label>
+                <input
+                  type="text"
+                  value={settings.exitPopupDescription}
+                  onChange={(e) => setSettings({ ...settings, exitPopupDescription: e.target.value })}
+                  className="w-full px-4 py-3 rounded-lg bg-background border border-white/10 text-white focus:outline-none focus:border-gold/50"
+                  placeholder="Şimdi kayıt ol ve 200 FREE SPIN + %300 Hoşgeldin Bonusu kazan!"
+                />
+              </div>
             </div>
           </div>
         </div>
