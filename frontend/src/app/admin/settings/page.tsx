@@ -15,6 +15,7 @@ interface Settings {
   socialTwitch: string;
   socialKick: string;
   socialYoutube: string;
+  [key: string]: string;
 }
 
 export default function SettingsPage() {
