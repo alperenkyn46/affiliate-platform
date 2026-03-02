@@ -1,5 +1,10 @@
 const mysql = require("mysql2/promise");
 
+// Production'da SSL gerekebilir (Railway, PlanetScale vb.)
+const sslConfig = process.env.DB_SSL === "true" 
+  ? { rejectUnauthorized: false } 
+  : false;
+
 const pool = mysql.createPool({
   host: process.env.DB_HOST || "localhost",
   port: process.env.DB_PORT || 3306,
@@ -9,12 +14,14 @@ const pool = mysql.createPool({
   waitForConnections: true,
   connectionLimit: 10,
   queueLimit: 0,
+  ssl: sslConfig,
 });
 
 async function testConnection() {
   try {
     const connection = await pool.getConnection();
     console.log("✅ Database connected successfully");
+    console.log(`📊 Host: ${process.env.DB_HOST || "localhost"}`);
     connection.release();
     return true;
   } catch (error) {

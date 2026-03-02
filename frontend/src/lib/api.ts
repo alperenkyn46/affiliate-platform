@@ -1,16 +1,20 @@
 function getApiUrl(): string {
-  // Server-side veya build time
-  if (typeof window === "undefined") {
-    return process.env.NEXT_PUBLIC_API_URL || "http://localhost:5000/api";
+  // Production: Environment variable kullan
+  if (process.env.NEXT_PUBLIC_API_URL) {
+    return process.env.NEXT_PUBLIC_API_URL;
   }
   
-  // Client-side: Eğer localhost değilse, mevcut hostname'i kullan
+  // Development: localhost veya LAN
+  if (typeof window === "undefined") {
+    return "http://localhost:5000/api";
+  }
+  
   const hostname = window.location.hostname;
   if (hostname === "localhost" || hostname === "127.0.0.1") {
-    return process.env.NEXT_PUBLIC_API_URL || "http://localhost:5000/api";
+    return "http://localhost:5000/api";
   }
   
-  // LAN erişimi: Aynı hostname'i backend portuyla kullan
+  // LAN erişimi (development)
   return `http://${hostname}:5000/api`;
 }
 

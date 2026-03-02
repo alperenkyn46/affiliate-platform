@@ -24,22 +24,34 @@ app.use(
       // Allow requests with no origin (mobile apps, curl, etc)
       if (!origin) return callback(null, true);
       
-      // Allow localhost
+      // Allow localhost (development)
       if (origin.includes("localhost") || origin.includes("127.0.0.1")) {
         return callback(null, true);
       }
       
-      // Allow LAN IPs (192.168.x.x, 10.x.x.x, 172.16-31.x.x)
+      // Allow LAN IPs (development)
       if (origin.match(/^https?:\/\/(192\.168\.|10\.|172\.(1[6-9]|2[0-9]|3[0-1])\.)/)) {
         return callback(null, true);
       }
       
-      // Allow configured frontend URL
+      // Allow Vercel preview deployments
+      if (origin.match(/\.vercel\.app$/)) {
+        return callback(null, true);
+      }
+      
+      // Allow configured frontend URL (production)
       if (process.env.FRONTEND_URL && origin === process.env.FRONTEND_URL) {
         return callback(null, true);
       }
       
-      callback(null, true); // Development: allow all
+      // Production: Only allow explicitly configured origins
+      if (process.env.NODE_ENV === "production") {
+        console.warn(`⚠️ Blocked CORS request from: ${origin}`);
+        return callback(new Error("Not allowed by CORS"));
+      }
+      
+      // Development fallback: allow all
+      callback(null, true);
     },
     credentials: true,
     methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
