@@ -17,7 +17,7 @@ export default function HeroSection() {
           {/* Badge */}
           <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-gold/10 border border-gold/20 mb-6">
             <span className="w-2 h-2 rounded-full bg-gold animate-pulse" />
-            <span className="text-gold text-sm font-medium">2024&apos;ün En İyi Bonusları</span>
+            <span className="text-gold text-sm font-medium">2026&apos;nın En İyi Bonusları</span>
           </div>
 
           {/* Title */}
