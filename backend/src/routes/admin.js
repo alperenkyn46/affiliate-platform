@@ -28,7 +28,7 @@ router.get("/analytics/funnel", adminController.getFunnelAnalytics);
 
 // Settings
 router.get("/settings", requireRole("super_admin", "admin"), adminController.getSettings);
-router.put("/settings", requireRole("super_admin"), adminController.updateSettings);
+router.put("/settings", requireRole("super_admin", "admin"), adminController.updateSettings);
 
 // Blog Management
 router.get("/blog", adminController.getBlogPosts);

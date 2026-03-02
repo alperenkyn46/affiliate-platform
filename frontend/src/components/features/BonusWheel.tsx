@@ -1,17 +1,18 @@
 "use client";
 
-import { useState, useRef } from "react";
+import { useState } from "react";
 import { Button } from "@/components/ui";
+import { useSettings } from "@/contexts/SettingsContext";
 
-const prizes = [
-  { label: "50 Freespin", color: "#d4af37" },
-  { label: "100₺ Bonus", color: "#1f1f1f" },
-  { label: "Tekrar Dene", color: "#d4af37" },
-  { label: "200₺ Bonus", color: "#1f1f1f" },
-  { label: "25 Freespin", color: "#d4af37" },
-  { label: "%50 Bonus", color: "#1f1f1f" },
-  { label: "150 Freespin", color: "#d4af37" },
-  { label: "500₺ Bonus", color: "#1f1f1f" },
+const prizeLabels = [
+  "50 Freespin",
+  "100₺ Bonus",
+  "Tekrar Dene",
+  "200₺ Bonus",
+  "25 Freespin",
+  "%50 Bonus",
+  "150 Freespin",
+  "500₺ Bonus",
 ];
 
 interface BonusWheelProps {
@@ -19,10 +20,28 @@ interface BonusWheelProps {
 }
 
 export default function BonusWheel({ onClose }: BonusWheelProps) {
+  const { settings } = useSettings();
   const [isSpinning, setIsSpinning] = useState(false);
   const [rotation, setRotation] = useState(0);
   const [result, setResult] = useState<string | null>(null);
   const [hasSpun, setHasSpun] = useState(false);
+
+  // Admin ayarlarından renkleri al
+  const primaryColor = settings.primaryColor || "#d4af37";
+  const secondaryColor = settings.secondaryColor || "#1a1a1a";
+
+  // Debug - konsola yazdır
+  console.log("BonusWheel Settings:", { 
+    primaryColor, 
+    secondaryColor, 
+    fullSettings: settings 
+  });
+
+  // Çift/tek sırayla renkleri dağıt
+  const prizes = prizeLabels.map((label, index) => ({
+    label,
+    color: index % 2 === 0 ? primaryColor : secondaryColor,
+  }));
 
   const spinWheel = () => {
     if (isSpinning || hasSpun) return;
@@ -46,6 +65,17 @@ export default function BonusWheel({ onClose }: BonusWheelProps) {
     }, 4000);
   };
 
+  // Renk kontrastını hesapla (açık mı koyu mu)
+  const isLightColor = (hex: string) => {
+    const c = hex.substring(1);
+    const rgb = parseInt(c, 16);
+    const r = (rgb >> 16) & 0xff;
+    const g = (rgb >> 8) & 0xff;
+    const b = (rgb >> 0) & 0xff;
+    const luma = 0.299 * r + 0.587 * g + 0.114 * b;
+    return luma > 128;
+  };
+
   return (
     <div className="fixed inset-0 bg-black/80 flex items-center justify-center z-50 p-4">
       <div className="bg-secondary rounded-2xl p-6 md:p-8 max-w-md w-full relative">
@@ -66,14 +96,18 @@ export default function BonusWheel({ onClose }: BonusWheelProps) {
         <div className="relative w-64 h-64 mx-auto mb-6">
           {/* Pointer */}
           <div className="absolute top-0 left-1/2 -translate-x-1/2 -translate-y-2 z-10">
-            <div className="w-0 h-0 border-l-[15px] border-r-[15px] border-t-[25px] border-l-transparent border-r-transparent border-t-gold" />
+            <div 
+              className="w-0 h-0 border-l-[15px] border-r-[15px] border-t-[25px] border-l-transparent border-r-transparent"
+              style={{ borderTopColor: primaryColor }}
+            />
           </div>
 
           {/* Wheel */}
           <div
-            className="w-full h-full rounded-full border-4 border-gold overflow-hidden transition-transform duration-[4000ms] ease-out"
+            className="w-full h-full rounded-full overflow-hidden transition-transform duration-[4000ms] ease-out"
             style={{
               transform: `rotate(${rotation}deg)`,
+              border: `4px solid ${primaryColor}`,
             }}
           >
             <svg viewBox="0 0 100 100" className="w-full h-full">
@@ -89,6 +123,9 @@ export default function BonusWheel({ onClose }: BonusWheelProps) {
 
                 const largeArcFlag = 360 / prizes.length > 180 ? 1 : 0;
 
+                // Yazı rengi: arka plan açıksa koyu, koyuysa açık
+                const textColor = isLightColor(prize.color) ? "#0f0f0f" : "#ffffff";
+
                 return (
                   <g key={index}>
                     <path
@@ -100,7 +137,7 @@ export default function BonusWheel({ onClose }: BonusWheelProps) {
                     <text
                       x="50"
                       y="50"
-                      fill={prize.color === "#d4af37" ? "#0f0f0f" : "#d4af37"}
+                      fill={textColor}
                       fontSize="4"
                       fontWeight="bold"
                       textAnchor="middle"
@@ -116,8 +153,14 @@ export default function BonusWheel({ onClose }: BonusWheelProps) {
           </div>
 
           {/* Center */}
-          <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-12 h-12 rounded-full bg-gold flex items-center justify-center shadow-glow">
-            <span className="text-background font-bold text-xl">🎰</span>
+          <div 
+            className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-12 h-12 rounded-full flex items-center justify-center"
+            style={{ 
+              backgroundColor: primaryColor,
+              boxShadow: `0 0 20px ${primaryColor}`,
+            }}
+          >
+            <span className="text-xl" style={{ color: isLightColor(primaryColor) ? "#0f0f0f" : "#ffffff" }}>🎰</span>
           </div>
         </div>
 

@@ -10,7 +10,7 @@ import {
   TrustSection,
   HowItWorksSection,
 } from "@/components/sections";
-import { LiveTicker, BonusWheel, ExitPopup } from "@/components/features";
+import { LiveTicker, BonusWheel, ExitPopup, BonusNotification } from "@/components/features";
 import { api } from "@/lib/api";
 import { Ad } from "@/types";
 import { featuredAds as mockFeaturedAds, regularAds as mockRegularAds } from "@/data/mockAds";
@@ -90,6 +90,16 @@ export default function Home() {
 
       {/* Exit Intent Popup */}
       <ExitPopup />
+
+      {/* Bonus Notifications */}
+      {!isLoading && featuredAds.length > 0 && (
+        <BonusNotification
+          ads={featuredAds}
+          delay={5000}      // 5 saniye sonra başla
+          interval={10000}  // Her 10 saniyede bir sonraki
+          duration={7000}   // Her biri 7 saniye görünsün
+        />
+      )}
     </div>
   );
 }
