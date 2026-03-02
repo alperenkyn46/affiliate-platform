@@ -56,7 +56,7 @@ app.use(
 if (process.env.NODE_ENV === "production") {
   const limiter = rateLimit({
     windowMs: 15 * 60 * 1000,
-    max: 100,
+    max: 1000, // Test için artırıldı
     message: { error: "Too many requests, please try again later." },
   });
   app.use("/api/", limiter);
