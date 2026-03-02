@@ -3,7 +3,10 @@ const { query } = require("../config/database");
 const blogController = {
   async getPosts(req, res) {
     try {
-      const { category, limit = 20, offset = 0, q } = req.query;
+      const { category, q } = req.query;
+      const limit = parseInt(req.query.limit) || 20;
+      const offset = parseInt(req.query.offset) || 0;
+      
       let sql = "SELECT id, title, slug, excerpt, cover_image, category, tags, views, published_at, created_at FROM blog_posts WHERE status = 'published'";
       const params = [];
 
@@ -16,8 +19,7 @@ const blogController = {
         params.push(`%${q}%`, `%${q}%`);
       }
 
-      sql += " ORDER BY published_at DESC LIMIT ? OFFSET ?";
-      params.push(parseInt(limit), parseInt(offset));
+      sql += ` ORDER BY published_at DESC LIMIT ${limit} OFFSET ${offset}`;
 
       const posts = await query(sql, params);
       const [countResult] = await query("SELECT COUNT(*) as total FROM blog_posts WHERE status = 'published'");
