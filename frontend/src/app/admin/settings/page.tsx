@@ -21,6 +21,7 @@ interface Settings {
   exitPopupAdId: string;
   exitPopupTitle: string;
   exitPopupDescription: string;
+  [key: string]: string;
 }
 
 export default function SettingsPage() {
