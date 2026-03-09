@@ -53,4 +53,9 @@ router.delete("/affiliates/:id", adminController.deleteAffiliate);
 router.get("/backups", adminController.getBackups);
 router.post("/backups", adminController.createBackup);
 
+// Contact Messages
+router.get("/messages", adminController.getMessages);
+router.put("/messages/:id", adminController.updateMessageStatus);
+router.delete("/messages/:id", requireRole("super_admin", "admin"), adminController.deleteMessage);
+
 module.exports = router;

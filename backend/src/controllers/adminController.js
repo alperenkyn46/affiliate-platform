@@ -794,6 +794,47 @@ const adminController = {
       res.status(500).json({ success: false, error: "Backup failed" });
     }
   },
+
+  // Contact Messages
+  async getMessages(req, res) {
+    try {
+      const messages = await query(
+        "SELECT * FROM contact_messages ORDER BY created_at DESC"
+      );
+      res.json({ success: true, data: messages });
+    } catch (error) {
+      console.error("Get messages error:", error);
+      res.json({ success: true, data: [] });
+    }
+  },
+
+  async updateMessageStatus(req, res) {
+    try {
+      const { id } = req.params;
+      const { status } = req.body;
+      
+      if (!["new", "read", "replied"].includes(status)) {
+        return res.status(400).json({ success: false, error: "Invalid status" });
+      }
+
+      await query("UPDATE contact_messages SET status = ? WHERE id = ?", [status, id]);
+      res.json({ success: true, message: "Message status updated" });
+    } catch (error) {
+      console.error("Update message status error:", error);
+      res.status(500).json({ success: false, error: "Failed to update message" });
+    }
+  },
+
+  async deleteMessage(req, res) {
+    try {
+      const { id } = req.params;
+      await query("DELETE FROM contact_messages WHERE id = ?", [id]);
+      res.json({ success: true, message: "Message deleted" });
+    } catch (error) {
+      console.error("Delete message error:", error);
+      res.status(500).json({ success: false, error: "Failed to delete message" });
+    }
+  },
 };
 
 module.exports = adminController;

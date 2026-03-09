@@ -263,6 +263,25 @@ export const api = {
       method: "POST",
       headers: { Authorization: `Bearer ${token}` },
     }),
+
+  // Contact Messages
+  getMessages: (token: string) =>
+    fetchApi("/admin/messages", {
+      headers: { Authorization: `Bearer ${token}` },
+    }),
+
+  updateMessageStatus: (token: string, id: number, status: string) =>
+    fetchApi(`/admin/messages/${id}`, {
+      method: "PUT",
+      headers: { Authorization: `Bearer ${token}` },
+      body: JSON.stringify({ status }),
+    }),
+
+  deleteMessage: (token: string, id: number) =>
+    fetchApi(`/admin/messages/${id}`, {
+      method: "DELETE",
+      headers: { Authorization: `Bearer ${token}` },
+    }),
 };
 
 export default api;
