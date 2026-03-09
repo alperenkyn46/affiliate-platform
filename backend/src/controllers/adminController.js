@@ -209,7 +209,15 @@ const adminController = {
           GROUP BY a.id 
           ORDER BY a.position ASC
         `);
-        res.json({ success: true, data: ads });
+        
+        // MySQL BOOLEAN'ı JavaScript boolean'a çevir
+        const formattedAds = ads.map(ad => ({
+          ...ad,
+          featured: ad.featured === 1 || ad.featured === true,
+          tags: typeof ad.tags === 'string' ? JSON.parse(ad.tags || '[]') : (ad.tags || [])
+        }));
+        
+        res.json({ success: true, data: formattedAds });
       } catch (dbError) {
         res.json({ success: true, data: mockAds });
       }
@@ -241,7 +249,7 @@ const adminController = {
             link,
             position || 999,
             status || "active",
-            featured || false,
+            featured ? 1 : 0,
             start_date || null,
             end_date || null,
           ]
@@ -283,7 +291,7 @@ const adminController = {
             link,
             position,
             status,
-            featured,
+            featured ? 1 : 0,
             start_date || null,
             end_date || null,
             id,

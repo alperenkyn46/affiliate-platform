@@ -128,11 +128,19 @@ const adsController = {
 
         if (featured !== undefined) {
           sql = "SELECT * FROM ads WHERE status = ? AND featured = ? ORDER BY position ASC";
-          params.push(featured === "true");
+          params.push(featured === "true" ? 1 : 0);
         }
 
         const ads = await query(sql, params);
-        return res.json({ success: true, data: ads });
+        
+        // MySQL BOOLEAN'ı JavaScript boolean'a çevir
+        const formattedAds = ads.map(ad => ({
+          ...ad,
+          featured: ad.featured === 1 || ad.featured === true,
+          tags: typeof ad.tags === 'string' ? JSON.parse(ad.tags || '[]') : (ad.tags || [])
+        }));
+        
+        return res.json({ success: true, data: formattedAds });
       } catch (dbError) {
         // Fallback to mock data if database is not available
         console.log("Database not available, using mock data");
@@ -157,7 +165,15 @@ const adsController = {
         if (ads.length === 0) {
           return res.status(404).json({ success: false, error: "Ad not found" });
         }
-        return res.json({ success: true, data: ads[0] });
+        
+        // MySQL BOOLEAN'ı JavaScript boolean'a çevir
+        const ad = {
+          ...ads[0],
+          featured: ads[0].featured === 1 || ads[0].featured === true,
+          tags: typeof ads[0].tags === 'string' ? JSON.parse(ads[0].tags || '[]') : (ads[0].tags || [])
+        };
+        
+        return res.json({ success: true, data: ad });
       } catch (dbError) {
         // Fallback to mock data
         const ad = mockAds.find((a) => a.id === parseInt(id));
