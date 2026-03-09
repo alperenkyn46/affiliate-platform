@@ -229,7 +229,7 @@ const adminController = {
 
   async createAd(req, res) {
     try {
-      const { title, description, bonus, bonus_details, image, link, position, status, featured, start_date, end_date } =
+      const { title, description, bonus, bonus_details, image, link, position, status, featured, rating, tags, start_date, end_date } =
         req.body;
 
       if (!title || !link) {
@@ -237,9 +237,11 @@ const adminController = {
       }
 
       try {
+        const tagsJson = Array.isArray(tags) ? JSON.stringify(tags) : (tags || '[]');
+        
         const result = await query(
-          `INSERT INTO ads (title, description, bonus, bonus_details, image, link, position, status, featured, start_date, end_date, created_at) 
-           VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, NOW())`,
+          `INSERT INTO ads (title, description, bonus, bonus_details, image, link, position, status, featured, rating, tags, start_date, end_date, created_at) 
+           VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, NOW())`,
           [
             title,
             description || "",
@@ -250,6 +252,8 @@ const adminController = {
             position || 999,
             status || "active",
             featured ? 1 : 0,
+            rating || 4.5,
+            tagsJson,
             start_date || null,
             end_date || null,
           ]
@@ -260,6 +264,7 @@ const adminController = {
           data: { id: result.insertId, ...req.body },
         });
       } catch (dbError) {
+        console.error("Database error:", dbError);
         res.status(500).json({ success: false, error: "Database not available" });
       }
     } catch (error) {
@@ -271,14 +276,17 @@ const adminController = {
   async updateAd(req, res) {
     try {
       const { id } = req.params;
-      const { title, description, bonus, bonus_details, image, link, position, status, featured, start_date, end_date } =
+      const { title, description, bonus, bonus_details, image, link, position, status, featured, rating, tags, start_date, end_date } =
         req.body;
 
       try {
+        const tagsJson = Array.isArray(tags) ? JSON.stringify(tags) : (tags || '[]');
+        
         await query(
           `UPDATE ads SET 
            title = ?, description = ?, bonus = ?, bonus_details = ?, 
            image = ?, link = ?, position = ?, status = ?, featured = ?,
+           rating = ?, tags = ?,
            start_date = ?, end_date = ?,
            updated_at = NOW() 
            WHERE id = ?`,
@@ -292,6 +300,8 @@ const adminController = {
             position,
             status,
             featured ? 1 : 0,
+            rating || 4.5,
+            tagsJson,
             start_date || null,
             end_date || null,
             id,
@@ -300,6 +310,7 @@ const adminController = {
 
         res.json({ success: true, message: "Ad updated successfully" });
       } catch (dbError) {
+        console.error("Database error:", dbError);
         res.status(500).json({ success: false, error: "Database not available" });
       }
     } catch (error) {

@@ -17,9 +17,13 @@ interface Ad {
   position: number;
   status: string;
   featured: boolean;
+  rating: number;
+  tags: string[];
   click_count: number;
   created_at: string;
 }
+
+const AVAILABLE_TAGS = ["Yeni", "Popüler", "Premium", "VIP", "Özel", "Sınırlı"];
 
 export default function AdsManagementPage() {
   const { token } = useAuth();
@@ -37,6 +41,8 @@ export default function AdsManagementPage() {
     position: 1,
     status: "active",
     featured: false,
+    rating: 4.5,
+    tags: [] as string[],
   });
 
   useEffect(() => {
@@ -62,6 +68,11 @@ export default function AdsManagementPage() {
   const handleOpenModal = (ad?: Ad) => {
     if (ad) {
       setEditingAd(ad);
+      const adTags = Array.isArray(ad.tags) 
+        ? ad.tags 
+        : typeof ad.tags === 'string' 
+          ? JSON.parse(ad.tags || '[]') 
+          : [];
       setFormData({
         title: ad.title,
         description: ad.description || "",
@@ -72,6 +83,8 @@ export default function AdsManagementPage() {
         position: ad.position,
         status: ad.status,
         featured: ad.featured,
+        rating: ad.rating || 4.5,
+        tags: adTags,
       });
     } else {
       setEditingAd(null);
@@ -85,6 +98,8 @@ export default function AdsManagementPage() {
         position: ads.length + 1,
         status: "active",
         featured: false,
+        rating: 4.5,
+        tags: [],
       });
     }
     setShowModal(true);
@@ -182,12 +197,29 @@ export default function AdsManagementPage() {
                       </span>
                     </td>
                     <td className="px-6 py-4">
-                      <div className="flex items-center gap-2">
+                      <div className="flex flex-wrap items-center gap-2">
                         <Badge variant={ad.status === "active" ? "success" : "default"}>
                           {ad.status === "active" ? "Aktif" : "Pasif"}
                         </Badge>
                         {ad.featured && <Badge variant="gold">Öne Çıkan</Badge>}
+                        {ad.rating && (
+                          <span className="flex items-center gap-1 text-gold text-sm">
+                            <svg className="w-4 h-4 fill-current" viewBox="0 0 20 20">
+                              <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
+                            </svg>
+                            {ad.rating}
+                          </span>
+                        )}
                       </div>
+                      {ad.tags && ad.tags.length > 0 && (
+                        <div className="flex flex-wrap gap-1 mt-1">
+                          {(Array.isArray(ad.tags) ? ad.tags : []).map((tag: string) => (
+                            <span key={tag} className="text-xs bg-gold/20 text-gold px-2 py-0.5 rounded">
+                              {tag}
+                            </span>
+                          ))}
+                        </div>
+                      )}
                     </td>
                     <td className="px-6 py-4">
                       <div className="flex items-center justify-end gap-2">
@@ -244,6 +276,21 @@ export default function AdsManagementPage() {
                     {ad.status === "active" ? "Aktif" : "Pasif"}
                   </Badge>
                   {ad.featured && <Badge variant="gold">Öne Çıkan</Badge>}
+                  {ad.rating && (
+                    <span className="flex items-center gap-1 text-gold text-sm">
+                      <svg className="w-4 h-4 fill-current" viewBox="0 0 20 20">
+                        <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
+                      </svg>
+                      {ad.rating}
+                    </span>
+                  )}
+                  {ad.tags && ad.tags.length > 0 && (
+                    (Array.isArray(ad.tags) ? ad.tags : []).map((tag: string) => (
+                      <span key={tag} className="text-xs bg-gold/20 text-gold px-2 py-0.5 rounded">
+                        {tag}
+                      </span>
+                    ))
+                  )}
                 </div>
 
                 <div className="flex items-center justify-between pt-3 border-t border-white/5">
@@ -412,6 +459,62 @@ export default function AdsManagementPage() {
                 <label htmlFor="featured" className="text-gray-300">
                   Öne çıkan reklam olarak göster
                 </label>
+              </div>
+
+              <div>
+                <label className="block text-sm font-medium text-gray-300 mb-2">
+                  Yıldız Değeri
+                </label>
+                <div className="flex items-center gap-3">
+                  <input
+                    type="range"
+                    min="1"
+                    max="5"
+                    step="0.1"
+                    value={formData.rating}
+                    onChange={(e) => setFormData({ ...formData, rating: parseFloat(e.target.value) })}
+                    className="flex-1 h-2 bg-background rounded-lg appearance-none cursor-pointer accent-gold"
+                  />
+                  <div className="flex items-center gap-1 min-w-[60px]">
+                    <svg className="w-5 h-5 fill-gold" viewBox="0 0 20 20">
+                      <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
+                    </svg>
+                    <span className="text-gold font-semibold">{formData.rating.toFixed(1)}</span>
+                  </div>
+                </div>
+              </div>
+
+              <div>
+                <label className="block text-sm font-medium text-gray-300 mb-2">
+                  Etiketler
+                </label>
+                <div className="flex flex-wrap gap-2">
+                  {AVAILABLE_TAGS.map((tag) => (
+                    <button
+                      key={tag}
+                      type="button"
+                      onClick={() => {
+                        if (formData.tags.includes(tag)) {
+                          setFormData({ ...formData, tags: formData.tags.filter(t => t !== tag) });
+                        } else {
+                          setFormData({ ...formData, tags: [...formData.tags, tag] });
+                        }
+                      }}
+                      className={`px-3 py-1.5 rounded-lg text-sm font-medium transition-all ${
+                        formData.tags.includes(tag)
+                          ? "bg-gold text-background"
+                          : "bg-background border border-white/10 text-gray-400 hover:border-gold/50 hover:text-white"
+                      }`}
+                    >
+                      {tag}
+                    </button>
+                  ))}
+                </div>
+                {formData.tags.length > 0 && (
+                  <p className="text-xs text-gray-500 mt-2">
+                    Seçili: {formData.tags.join(", ")}
+                  </p>
+                )}
               </div>
 
               <div className="flex gap-3 pt-4">
