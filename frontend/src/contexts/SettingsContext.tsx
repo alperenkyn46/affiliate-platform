@@ -26,6 +26,8 @@ interface SettingsContextType {
   refreshSettings: () => Promise<void>;
 }
 
+const SETTINGS_CACHE_KEY = "site_settings_cache";
+
 const defaultSettings: SiteSettings = {
   siteName: "CasinoHub",
   primaryColor: "#d4af37",
@@ -43,6 +45,28 @@ const defaultSettings: SiteSettings = {
   exitPopupDescription: "",
 };
 
+function getCachedSettings(): SiteSettings {
+  if (typeof window === "undefined") return defaultSettings;
+  try {
+    const cached = localStorage.getItem(SETTINGS_CACHE_KEY);
+    if (cached) {
+      return JSON.parse(cached) as SiteSettings;
+    }
+  } catch {
+    // Ignore parse errors
+  }
+  return defaultSettings;
+}
+
+function setCachedSettings(settings: SiteSettings) {
+  if (typeof window === "undefined") return;
+  try {
+    localStorage.setItem(SETTINGS_CACHE_KEY, JSON.stringify(settings));
+  } catch {
+    // Ignore storage errors
+  }
+}
+
 const SettingsContext = createContext<SettingsContextType>({
   settings: defaultSettings,
   isLoading: true,
@@ -50,14 +74,16 @@ const SettingsContext = createContext<SettingsContextType>({
 });
 
 export function SettingsProvider({ children }: { children: ReactNode }) {
-  const [settings, setSettings] = useState<SiteSettings>(defaultSettings);
+  const [settings, setSettings] = useState<SiteSettings>(getCachedSettings);
   const [isLoading, setIsLoading] = useState(true);
 
   const loadSettings = async () => {
     try {
       const response = await api.getPublicSettings();
       if (response.success && response.data) {
-        setSettings(response.data as SiteSettings);
+        const newSettings = response.data as SiteSettings;
+        setSettings(newSettings);
+        setCachedSettings(newSettings);
       }
     } catch (error) {
       console.error("Failed to load settings:", error);

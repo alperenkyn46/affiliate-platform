@@ -34,11 +34,9 @@ function adjustColor(hex: string, percent: number): string {
 }
 
 export default function ThemeProvider({ children }: { children: React.ReactNode }) {
-  const { settings, isLoading } = useSettings();
+  const { settings } = useSettings();
 
   useEffect(() => {
-    if (isLoading) return;
-
     const root = document.documentElement;
 
     // Primary color (gold)
@@ -67,7 +65,7 @@ export default function ThemeProvider({ children }: { children: React.ReactNode 
       root.style.setProperty("--color-secondary-rgb", `${secondaryRgb.r}, ${secondaryRgb.g}, ${secondaryRgb.b}`);
     }
 
-  }, [settings, isLoading]);
+  }, [settings]);
 
   return <>{children}</>;
 }

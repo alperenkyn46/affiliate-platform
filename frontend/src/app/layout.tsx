@@ -62,6 +62,33 @@ export default function RootLayout({
               } else {
                 document.documentElement.classList.add('dark');
               }
+              
+              // Load cached settings for instant theme
+              try {
+                var cached = localStorage.getItem('site_settings_cache');
+                if (cached) {
+                  var settings = JSON.parse(cached);
+                  var root = document.documentElement;
+                  
+                  if (settings.primaryColor) {
+                    root.style.setProperty('--color-gold', settings.primaryColor);
+                    var hex = settings.primaryColor.replace('#', '');
+                    var r = parseInt(hex.substr(0, 2), 16);
+                    var g = parseInt(hex.substr(2, 2), 16);
+                    var b = parseInt(hex.substr(4, 2), 16);
+                    root.style.setProperty('--color-gold-rgb', r + ', ' + g + ', ' + b);
+                  }
+                  
+                  if (settings.secondaryColor) {
+                    root.style.setProperty('--color-secondary', settings.secondaryColor);
+                    var hex2 = settings.secondaryColor.replace('#', '');
+                    var r2 = parseInt(hex2.substr(0, 2), 16);
+                    var g2 = parseInt(hex2.substr(2, 2), 16);
+                    var b2 = parseInt(hex2.substr(4, 2), 16);
+                    root.style.setProperty('--color-secondary-rgb', r2 + ', ' + g2 + ', ' + b2);
+                  }
+                }
+              } catch(e) {}
             })();
           `,
         }} />
