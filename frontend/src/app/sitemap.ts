@@ -49,9 +49,9 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     if (res.ok) {
       const data = await res.json();
       if (data.success && data.data) {
-        blogPages = data.data.map((post: { slug: string; updated_at: string }) => ({
+        blogPages = data.data.map((post: { slug: string; published_at?: string; created_at?: string }) => ({
           url: `${BASE_URL}/blog/${post.slug}`,
-          lastModified: new Date(post.updated_at),
+          lastModified: post.published_at || post.created_at ? new Date(post.published_at || post.created_at || Date.now()) : new Date(),
           changeFrequency: "weekly" as const,
           priority: 0.7,
         }));
