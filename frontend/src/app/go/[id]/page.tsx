@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { useParams } from "next/navigation";
+import { getAffiliateRef } from "@/hooks/useAffiliateTracking";
 
 export default function RedirectPage() {
   const params = useParams();
@@ -13,8 +14,16 @@ export default function RedirectPage() {
 
     const API_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:5000/api";
     
-    // Redirect to backend which will handle tracking and redirect
-    window.location.href = `${API_URL}/go/${id}`;
+    // Cookie'den affiliate ref'i oku
+    const affiliateRef = getAffiliateRef();
+    
+    // Backend'e yönlendir (ref varsa ekle)
+    let redirectUrl = `${API_URL}/go/${id}`;
+    if (affiliateRef) {
+      redirectUrl += `?ref=${encodeURIComponent(affiliateRef)}`;
+    }
+    
+    window.location.href = redirectUrl;
   }, [id]);
 
   return (
