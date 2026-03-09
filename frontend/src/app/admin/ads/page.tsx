@@ -23,7 +23,7 @@ interface Ad {
   created_at: string;
 }
 
-const AVAILABLE_TAGS = ["Yeni", "Popüler", "Premium", "VIP", "Özel", "Sınırlı"];
+const AVAILABLE_TAGS = ["Yeni", "Popüler", "Premium", "VIP", "Özel", "Sınırlı", "Freespin", "Slot", "Mega", "Bonus", "Jackpot", "Canlı Casino"];
 
 export default function AdsManagementPage() {
   const { token } = useAuth();
