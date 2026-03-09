@@ -126,10 +126,11 @@ export default function AdsManagementPage() {
 
   return (
     <AdminShell>
-      <div className="flex items-center justify-between mb-8">
+      {/* Header */}
+      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-6 lg:mb-8">
         <div>
-          <h1 className="text-2xl font-bold text-white mb-2">Reklam Yönetimi</h1>
-          <p className="text-gray-400">Reklamlarınızı ekleyin, düzenleyin ve yönetin</p>
+          <h1 className="text-xl lg:text-2xl font-bold text-white mb-1">Reklam Yönetimi</h1>
+          <p className="text-sm lg:text-base text-gray-400">Reklamlarınızı ekleyin ve yönetin</p>
         </div>
         <Button onClick={() => handleOpenModal()}>+ Yeni Reklam</Button>
       </div>
@@ -139,98 +140,174 @@ export default function AdsManagementPage() {
           <div className="animate-spin w-8 h-8 border-4 border-gold border-t-transparent rounded-full" />
         </div>
       ) : (
-        <div className="bg-secondary rounded-xl border border-white/5 overflow-hidden">
-          <table className="w-full">
-            <thead>
-              <tr className="border-b border-white/5">
-                <th className="text-left px-6 py-4 text-gray-400 font-medium text-sm">Sıra</th>
-                <th className="text-left px-6 py-4 text-gray-400 font-medium text-sm">Reklam</th>
-                <th className="text-left px-6 py-4 text-gray-400 font-medium text-sm">Bonus</th>
-                <th className="text-left px-6 py-4 text-gray-400 font-medium text-sm">Tıklama</th>
-                <th className="text-left px-6 py-4 text-gray-400 font-medium text-sm">Durum</th>
-                <th className="text-right px-6 py-4 text-gray-400 font-medium text-sm">İşlemler</th>
-              </tr>
-            </thead>
-            <tbody>
-              {ads.map((ad) => (
-                <tr key={ad.id} className="border-b border-white/5 hover:bg-white/[0.02]">
-                  <td className="px-6 py-4">
-                    <span className="text-gray-500 font-medium">{ad.position}</span>
-                  </td>
-                  <td className="px-6 py-4">
-                    <div className="flex items-center gap-3">
-                      <div className="w-10 h-10 rounded-lg bg-gold/20 flex items-center justify-center">
-                        <span className="text-gold font-bold">{ad.title[0]}</span>
-                      </div>
-                      <div>
-                        <p className="text-white font-medium">{ad.title}</p>
-                        <p className="text-gray-500 text-sm truncate max-w-[200px]">
-                          {ad.description}
-                        </p>
-                      </div>
-                    </div>
-                  </td>
-                  <td className="px-6 py-4">
-                    <span className="text-gold font-medium">{ad.bonus}</span>
-                  </td>
-                  <td className="px-6 py-4">
-                    <span className="text-white font-semibold">
-                      {(ad.click_count || 0).toLocaleString()}
-                    </span>
-                  </td>
-                  <td className="px-6 py-4">
-                    <div className="flex items-center gap-2">
-                      <Badge variant={ad.status === "active" ? "success" : "default"}>
-                        {ad.status === "active" ? "Aktif" : "Pasif"}
-                      </Badge>
-                      {ad.featured && <Badge variant="gold">Öne Çıkan</Badge>}
-                    </div>
-                  </td>
-                  <td className="px-6 py-4">
-                    <div className="flex items-center justify-end gap-2">
-                      <button
-                        onClick={() => handleOpenModal(ad)}
-                        className="p-2 text-gray-400 hover:text-white hover:bg-white/5 rounded-lg transition-colors"
-                      >
-                        <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
-                        </svg>
-                      </button>
-                      <button
-                        onClick={() => handleDelete(ad.id)}
-                        className="p-2 text-gray-400 hover:text-red-400 hover:bg-red-400/10 rounded-lg transition-colors"
-                      >
-                        <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
-                        </svg>
-                      </button>
-                    </div>
-                  </td>
+        <>
+          {/* Desktop Table View */}
+          <div className="hidden lg:block bg-secondary rounded-xl border border-white/5 overflow-hidden">
+            <table className="w-full">
+              <thead>
+                <tr className="border-b border-white/5">
+                  <th className="text-left px-6 py-4 text-gray-400 font-medium text-sm">Sıra</th>
+                  <th className="text-left px-6 py-4 text-gray-400 font-medium text-sm">Reklam</th>
+                  <th className="text-left px-6 py-4 text-gray-400 font-medium text-sm">Bonus</th>
+                  <th className="text-left px-6 py-4 text-gray-400 font-medium text-sm">Tıklama</th>
+                  <th className="text-left px-6 py-4 text-gray-400 font-medium text-sm">Durum</th>
+                  <th className="text-right px-6 py-4 text-gray-400 font-medium text-sm">İşlemler</th>
                 </tr>
-              ))}
-            </tbody>
-          </table>
+              </thead>
+              <tbody>
+                {ads.map((ad) => (
+                  <tr key={ad.id} className="border-b border-white/5 hover:bg-white/[0.02]">
+                    <td className="px-6 py-4">
+                      <span className="text-gray-500 font-medium">{ad.position}</span>
+                    </td>
+                    <td className="px-6 py-4">
+                      <div className="flex items-center gap-3">
+                        <div className="w-10 h-10 rounded-lg bg-gold/20 flex items-center justify-center flex-shrink-0">
+                          <span className="text-gold font-bold">{ad.title[0]}</span>
+                        </div>
+                        <div className="min-w-0">
+                          <p className="text-white font-medium truncate">{ad.title}</p>
+                          <p className="text-gray-500 text-sm truncate max-w-[200px]">
+                            {ad.description}
+                          </p>
+                        </div>
+                      </div>
+                    </td>
+                    <td className="px-6 py-4">
+                      <span className="text-gold font-medium">{ad.bonus}</span>
+                    </td>
+                    <td className="px-6 py-4">
+                      <span className="text-white font-semibold">
+                        {(ad.click_count || 0).toLocaleString()}
+                      </span>
+                    </td>
+                    <td className="px-6 py-4">
+                      <div className="flex items-center gap-2">
+                        <Badge variant={ad.status === "active" ? "success" : "default"}>
+                          {ad.status === "active" ? "Aktif" : "Pasif"}
+                        </Badge>
+                        {ad.featured && <Badge variant="gold">Öne Çıkan</Badge>}
+                      </div>
+                    </td>
+                    <td className="px-6 py-4">
+                      <div className="flex items-center justify-end gap-2">
+                        <button
+                          onClick={() => handleOpenModal(ad)}
+                          className="p-2 text-gray-400 hover:text-white hover:bg-white/5 rounded-lg transition-colors"
+                        >
+                          <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
+                          </svg>
+                        </button>
+                        <button
+                          onClick={() => handleDelete(ad.id)}
+                          className="p-2 text-gray-400 hover:text-red-400 hover:bg-red-400/10 rounded-lg transition-colors"
+                        >
+                          <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+                          </svg>
+                        </button>
+                      </div>
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
 
-          {ads.length === 0 && (
-            <div className="text-center py-12">
-              <p className="text-gray-500 mb-4">Henüz reklam eklenmemiş</p>
-              <Button onClick={() => handleOpenModal()}>İlk Reklamı Ekle</Button>
-            </div>
-          )}
-        </div>
+            {ads.length === 0 && (
+              <div className="text-center py-12">
+                <p className="text-gray-500 mb-4">Henüz reklam eklenmemiş</p>
+                <Button onClick={() => handleOpenModal()}>İlk Reklamı Ekle</Button>
+              </div>
+            )}
+          </div>
+
+          {/* Mobile Card View */}
+          <div className="lg:hidden space-y-3">
+            {ads.map((ad) => (
+              <div key={ad.id} className="bg-secondary rounded-xl p-4 border border-white/5">
+                <div className="flex items-start justify-between gap-3 mb-3">
+                  <div className="flex items-center gap-3 min-w-0">
+                    <div className="w-12 h-12 rounded-lg bg-gold/20 flex items-center justify-center flex-shrink-0">
+                      <span className="text-gold font-bold text-lg">{ad.title[0]}</span>
+                    </div>
+                    <div className="min-w-0">
+                      <p className="text-white font-semibold truncate">{ad.title}</p>
+                      <p className="text-gray-500 text-sm truncate">{ad.description}</p>
+                    </div>
+                  </div>
+                  <span className="text-gray-500 text-sm font-medium flex-shrink-0">#{ad.position}</span>
+                </div>
+
+                <div className="flex flex-wrap items-center gap-2 mb-3">
+                  <Badge variant={ad.status === "active" ? "success" : "default"}>
+                    {ad.status === "active" ? "Aktif" : "Pasif"}
+                  </Badge>
+                  {ad.featured && <Badge variant="gold">Öne Çıkan</Badge>}
+                </div>
+
+                <div className="flex items-center justify-between pt-3 border-t border-white/5">
+                  <div className="flex items-center gap-4 text-sm">
+                    <div>
+                      <span className="text-gray-500">Bonus:</span>
+                      <span className="text-gold ml-1 font-medium">{ad.bonus}</span>
+                    </div>
+                    <div>
+                      <span className="text-gray-500">Tıklama:</span>
+                      <span className="text-white ml-1 font-semibold">{(ad.click_count || 0).toLocaleString()}</span>
+                    </div>
+                  </div>
+                  <div className="flex items-center gap-1">
+                    <button
+                      onClick={() => handleOpenModal(ad)}
+                      className="p-2 text-gray-400 hover:text-white hover:bg-white/5 rounded-lg transition-colors"
+                    >
+                      <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
+                      </svg>
+                    </button>
+                    <button
+                      onClick={() => handleDelete(ad.id)}
+                      className="p-2 text-gray-400 hover:text-red-400 hover:bg-red-400/10 rounded-lg transition-colors"
+                    >
+                      <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+                      </svg>
+                    </button>
+                  </div>
+                </div>
+              </div>
+            ))}
+
+            {ads.length === 0 && (
+              <div className="bg-secondary rounded-xl p-8 border border-white/5 text-center">
+                <p className="text-gray-500 mb-4">Henüz reklam eklenmemiş</p>
+                <Button onClick={() => handleOpenModal()}>İlk Reklamı Ekle</Button>
+              </div>
+            )}
+          </div>
+        </>
       )}
 
       {/* Modal */}
       {showModal && (
-        <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
+        <div className="fixed inset-0 bg-black/60 flex items-center justify-center z-50 p-4">
           <div className="bg-secondary rounded-xl w-full max-w-lg max-h-[90vh] overflow-y-auto">
-            <div className="p-6 border-b border-white/5">
-              <h2 className="text-xl font-bold text-white">
+            <div className="sticky top-0 bg-secondary p-4 lg:p-6 border-b border-white/5 flex items-center justify-between">
+              <h2 className="text-lg lg:text-xl font-bold text-white">
                 {editingAd ? "Reklamı Düzenle" : "Yeni Reklam Ekle"}
               </h2>
+              <button
+                onClick={handleCloseModal}
+                className="p-2 text-gray-400 hover:text-white hover:bg-white/5 rounded-lg"
+              >
+                <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                </svg>
+              </button>
             </div>
 
-            <form onSubmit={handleSubmit} className="p-6 space-y-4">
+            <form onSubmit={handleSubmit} className="p-4 lg:p-6 space-y-4">
               <div>
                 <label className="block text-sm font-medium text-gray-300 mb-2">
                   Site Adı *
@@ -256,7 +333,7 @@ export default function AdsManagementPage() {
                 />
               </div>
 
-              <div className="grid grid-cols-2 gap-4">
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <div>
                   <label className="block text-sm font-medium text-gray-300 mb-2">
                     Bonus
