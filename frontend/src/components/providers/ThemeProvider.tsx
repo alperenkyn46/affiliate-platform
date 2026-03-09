@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect } from "react";
+import React, { useEffect } from "react";
 import { useSettings } from "@/contexts/SettingsContext";
 
 function hexToRgb(hex: string): { r: number; g: number; b: number } | null {
@@ -34,7 +34,8 @@ function adjustColor(hex: string, percent: number): string {
 }
 
 export default function ThemeProvider({ children }: { children: React.ReactNode }) {
-  const { settings } = useSettings();
+  const { settings, isLoading } = useSettings();
+  const [isReady, setIsReady] = React.useState(false);
 
   useEffect(() => {
     const root = document.documentElement;
@@ -65,7 +66,40 @@ export default function ThemeProvider({ children }: { children: React.ReactNode 
       root.style.setProperty("--color-secondary-rgb", `${secondaryRgb.r}, ${secondaryRgb.g}, ${secondaryRgb.b}`);
     }
 
-  }, [settings]);
+    // Mark as ready after first render with settings
+    if (!isLoading) {
+      setIsReady(true);
+    }
+  }, [settings, isLoading]);
+
+  // Show loading screen until settings are loaded
+  if (!isReady) {
+    return (
+      <div 
+        style={{ 
+          position: 'fixed', 
+          inset: 0, 
+          backgroundColor: settings.secondaryColor || '#0f0f0f',
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+          zIndex: 9999
+        }}
+      >
+        <div 
+          style={{
+            width: 40,
+            height: 40,
+            border: `3px solid ${settings.primaryColor || '#d4af37'}`,
+            borderTopColor: 'transparent',
+            borderRadius: '50%',
+            animation: 'spin 1s linear infinite'
+          }}
+        />
+        <style>{`@keyframes spin { to { transform: rotate(360deg); } }`}</style>
+      </div>
+    );
+  }
 
   return <>{children}</>;
 }
